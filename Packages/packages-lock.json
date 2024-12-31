@@ -2,6 +2,7 @@
   "dependencies": {
     "com.meta.movement": {
       "version": "file:C:/Users/user/laziz_phd/unityProjects/MovementSDK/Unity-Movement-69.0.0/Unity-Movement-69.0.0",
+      "version": "file:C:/Users/suyun/Unity projects/MovementSDK/Unity-Movement-69.0.0",
       "depth": 0,
       "source": "local",
       "dependencies": {
