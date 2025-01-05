@@ -71,3 +71,11 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# Custom folders to ignore
+.utmp/
+.cache/
+.logs/
+
+# Ignore Samples folder in Assets
+/Assets/Samples/
