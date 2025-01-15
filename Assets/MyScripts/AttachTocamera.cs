@@ -1,0 +1,27 @@
+using UnityEngine;
+using Unity.Netcode;
+
+
+public class AttachToCamera : NetworkBehaviour
+{
+    private GameObject cameraRig;
+
+    private void Start()
+    {
+        GameObject XRrig = GameObject.FindGameObjectWithTag("XRrig");
+        if (XRrig == null)
+        {
+            Debug.LogError("--- Static camera controller (XRrig) NOT found");
+            return;
+        }
+        
+        cameraRig = XRrig;
+    }
+
+
+    void Update()
+    {
+        this.transform.position = cameraRig.transform.position + new Vector3(0, 1.1f, 0.06f);
+        this.transform.rotation = cameraRig.transform.rotation;
+    }
+}
