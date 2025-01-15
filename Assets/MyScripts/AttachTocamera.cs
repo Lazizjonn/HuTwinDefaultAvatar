@@ -11,7 +11,7 @@ public class AttachToCamera : NetworkBehaviour
         GameObject XRrig = GameObject.FindGameObjectWithTag("XRrig");
         if (XRrig == null)
         {
-            Debug.LogError("--- Static camera controller (XRrig) NOT found");
+            Debug.LogError("--- Static camera controller (XRrig) NOT found2");
             return;
         }
         
