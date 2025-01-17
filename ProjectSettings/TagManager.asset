@@ -3,7 +3,25 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - DinnerPlate
+  - DoughBall
+  - Indicator
+  - Pizza
+  - RollingPin
+  - TomatoSaucePizza
+  - DropableArea
+  - Hand
+  - TomatoSauce
+  - Water
+  - CuttingBoard
+  - Flour
+  - XRrig
+  - Sausage
+  - BellPepper
+  - PrefabHead
+  - FidelityPlayer
+  - FaceExprManager
   layers:
   - Default
   - TransparentFX

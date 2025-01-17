@@ -81,3 +81,8 @@ crashlytics-build.properties
 /Assets/Samples/
 /.idea/
 /AndroidBuild/
+/Assets/Resources/PerformanceTestRunInfo.json
+/Assets/Resources/PerformanceTestRunSettings.json
+/Assets/Resources/PerformanceTestRunSettings.json.meta
+/Assets/Resources/PerformanceTestRunInfo.json.meta
+/releases/

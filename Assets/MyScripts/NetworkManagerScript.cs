@@ -4,14 +4,15 @@ using Unity.Netcode.Transports.UTP;
 using System.Net;
 using AddressFamily = System.Net.Sockets.AddressFamily;
 using TMPro;
+using Oculus.Movement.Tracking;
 
 public class NetworkManagerScript : MonoBehaviour
 {
-    string sharedLocalIpAddress = "127.0.0.1";
-    public TMP_Text deviceIpAddress;
-    public TMP_InputField ipTextField;
+    private string sharedLocalIpAddress = "127.0.0.1";
+    [SerializeField] private TMP_Text deviceIpAddress;
+    [SerializeField] private TMP_InputField ipTextField;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
         QualitySettings.vSyncCount = 0;
@@ -25,17 +26,13 @@ public class NetworkManagerScript : MonoBehaviour
         deviceIpAddress.text = sharedLocalIpAddress;
         ipTextField.text = "";
 
-        //NetworkManager.Singleton.StartHost();
-
-        // This retrieves the address assigned to the client
-        //string ipv4Address = NetworkManager.Singleton.LocalClientId.ToString();
-        //Debug.Log("Start(): Host IP address: " + ipv4Address);
+        NetworkManager.Singleton.OnClientConnectedCallback += OnNewClientConnected;
     }
 
     // Update is called once per frame
     void Update()
     {
-       //
+        UpdateFaceExpression();
     }
 
     public void StartHost() 
@@ -58,7 +55,6 @@ public class NetworkManagerScript : MonoBehaviour
         NetworkManager.Singleton.Shutdown();
     }
 
-    
     private string FindIpAddress()
     {
         var host = Dns.GetHostEntry(Dns.GetHostName());
@@ -66,12 +62,71 @@ public class NetworkManagerScript : MonoBehaviour
         {
             if (ip.AddressFamily == AddressFamily.InterNetwork)
             {
-                Debug.Log("FindIpAddress2(): ip.ToString() = " + ip.ToString());
+                Debug.Log("FindIpAddress(): ip.ToString() = " + ip.ToString());
                 return ip.ToString(); ;
             }
         }
 
-        Debug.LogError("FindIpAddress2(): No network adapters with an IPv4 address in the system!");
+        Debug.LogError("FindIpAddress(): No network adapters with an IPv4 address in the system!");
         return sharedLocalIpAddress;
+    }
+
+
+    // ===================================================================================================== //
+    GameObject[] onlinePlayers;
+
+    private MyCorrectivesFace myFaceObject;
+    private MyCorrectivesFace hisFaceObject;
+
+    private float[] myExpressions;
+    private void OnNewClientConnected(ulong clientId)
+    {
+        onlinePlayers = GameObject.FindGameObjectsWithTag("FidelityPlayer");
+        Debug.LogError("--- OnNewClientConnected(), onlinePlayers.Length: " + onlinePlayers.Length);
+        foreach (var player in onlinePlayers)
+        {
+            Debug.LogError("--- OnNewClientConnected(),  player.IsLocalPlayer: " + player.GetComponent<NetworkObject>().IsLocalPlayer);
+            if (player.GetComponent<NetworkObject>().IsLocalPlayer == true)
+            {
+                myFaceObject = player.GetComponentInChildren<MyCorrectivesFace>();
+            }
+            else
+            {
+                hisFaceObject = player.GetComponentInChildren<MyCorrectivesFace>();
+            }
+        }
+    }
+
+    private void UpdateFaceExpression()
+    {
+        if (onlinePlayers != null && onlinePlayers.Length >= 0)
+        {
+            Debug.LogError("--- UpdateFaceExpression(), onlinePlayers.Length: " + onlinePlayers.Length);
+
+            myExpressions = myFaceObject.PrepareRemoteExpressionWeights();
+            Debug.LogError("--- UpdateFaceExpression(), myExpressions.array.Length: " + myExpressions.Length);
+            
+            Debug.LogError("--- UpdateFaceExpression(), NetworkManager.IsHost: " + NetworkManager.Singleton.IsHost);
+
+            if (NetworkManager.Singleton.IsHost)
+                SetExpressionPlayerClientRpc(myExpressions);
+            else
+                SetExpressionPlayerServerRpc(myExpressions);
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void SetExpressionPlayerServerRpc(float[] incomingData)
+    {
+        hisFaceObject.UpdateExpressionWeightFromRemote(incomingData);
+    }
+
+    [ClientRpc]
+    private void SetExpressionPlayerClientRpc(float[] incomingData)
+    {
+        if (NetworkManager.Singleton.IsHost)
+            return;
+        
+        hisFaceObject.UpdateExpressionWeightFromRemote(incomingData);
     }
 }
