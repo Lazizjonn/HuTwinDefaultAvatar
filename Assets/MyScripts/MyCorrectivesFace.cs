@@ -326,24 +326,38 @@ namespace Oculus.Movement.Tracking
             {
                 return;
             }
+            
 
-            int numBlendshapes = SkinnedMesh.sharedMesh.blendShapeCount;
+            //int numBlendshapes = SkinnedMesh.sharedMesh.blendShapeCount;
+            int numBlendshapes = remoteExpressionWeights.Length;
+            Debug.LogError("--- UpdateExpressionWeightFromRemote(), numBlendshapes length: " + numBlendshapes);
 
             for (int i = 0; i < numBlendshapes; ++i)
             {
                 
-                OVRFaceExpressions.FaceExpression blendShapeToFaceExpression = GetFaceExpression(i);
+                //OVRFaceExpressions.FaceExpression blendShapeToFaceExpression = GetFaceExpression(i);
 
-                if (blendShapeToFaceExpression >= OVRFaceExpressions.FaceExpression.Max ||
+                /*if (blendShapeToFaceExpression >= OVRFaceExpressions.FaceExpression.Max ||
                     blendShapeToFaceExpression < 0)
                 {
                     continue;
-                }
-                
-                ExpressionWeights[(int)blendShapeToFaceExpression] = remoteExpressionWeights[(int)blendShapeToFaceExpression];
+                }*/
 
-                UpdateSkinnedMesh();
+                Debug.LogError($"--- UpdateExpressionWeightFromRemote(), remoteExpressionWeights[{i}]: {remoteExpressionWeights[i]}");
+
+                //ExpressionWeights[(int)blendShapeToFaceExpression] = remoteExpressionWeights[(int)blendShapeToFaceExpression];
+                ExpressionWeights[i] = remoteExpressionWeights[i];
+
+                SkinnedMesh.SetBlendShapeWeight(i, remoteExpressionWeights[i]);
             }
+
+            InitializeCachedValues();
+            UpdateCachedMeshValues();
+            if (_correctivesModule != null && CorrectivesEnabled)
+            {
+                _correctivesModule.ApplyCorrectives(_cachedBlendshapeValues);
+            }
+            UpdateSkinnedMesh();
         }
 
         public float[] PrepareRemoteExpressionWeights() // OVRFaceExpressions faceExpressions
@@ -362,6 +376,8 @@ namespace Oculus.Movement.Tracking
             {
                 OVRFaceExpressions.FaceExpression expression = (OVRFaceExpressions.FaceExpression)i;
                 remoteExpressionWeights[i] = faceExpressions[expression];
+
+                Debug.LogError($"--- PrepareRemoteExpressionWeights(), remoteExpressionWeights[{i}]: {remoteExpressionWeights[i]}");
             }
 
             Debug.Log("TTT, Prepared remote expression weights.");

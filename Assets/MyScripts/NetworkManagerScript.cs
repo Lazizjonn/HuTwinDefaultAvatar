@@ -16,7 +16,7 @@ public class NetworkManagerScript : MonoBehaviour
     void Start()
     {
         QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = 24;
+        Application.targetFrameRate = 10;
 
         sharedLocalIpAddress = FindIpAddress();
         Debug.Log("host ip: " + sharedLocalIpAddress);
@@ -99,7 +99,7 @@ public class NetworkManagerScript : MonoBehaviour
 
     private void UpdateFaceExpression()
     {
-        if (onlinePlayers != null && onlinePlayers.Length >= 0)
+        if (onlinePlayers != null && onlinePlayers.Length >= 1)
         {
             Debug.LogError("--- UpdateFaceExpression(), onlinePlayers.Length: " + onlinePlayers.Length);
 
@@ -107,18 +107,21 @@ public class NetworkManagerScript : MonoBehaviour
             Debug.LogError("--- UpdateFaceExpression(), myExpressions.array.Length: " + myExpressions.Length);
             
             Debug.LogError("--- UpdateFaceExpression(), NetworkManager.IsHost: " + NetworkManager.Singleton.IsHost);
-
-            if (NetworkManager.Singleton.IsHost)
-                SetExpressionPlayerClientRpc(myExpressions);
+            
+            SetExpressionPlayerServerRpc(myExpressions);
+           /* if (NetworkManager.Singleton.IsHost)
+               
+                //SetExpressionPlayerClientRpc(myExpressions);
             else
-                SetExpressionPlayerServerRpc(myExpressions);
+                SetExpressionPlayerServerRpc(myExpressions);*/
         }
     }
 
     [ServerRpc(RequireOwnership = false)]
     private void SetExpressionPlayerServerRpc(float[] incomingData)
     {
-        hisFaceObject.UpdateExpressionWeightFromRemote(incomingData);
+        //hisFaceObject.UpdateExpressionWeightFromRemote(incomingData);
+        myFaceObject.UpdateExpressionWeightFromRemote(incomingData);
     }
 
     [ClientRpc]
