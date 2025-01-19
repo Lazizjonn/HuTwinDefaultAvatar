@@ -11,6 +11,8 @@ public class NetworkManagerScript : MonoBehaviour
     private string sharedLocalIpAddress = "127.0.0.1";
     [SerializeField] private TMP_Text deviceIpAddress;
     [SerializeField] private TMP_InputField ipTextField;
+    [SerializeField] private TMP_InputField maxPayload;
+    [SerializeField] private TMP_InputField maxPacketQueue;
 
 
     void Start()
@@ -22,7 +24,6 @@ public class NetworkManagerScript : MonoBehaviour
         Debug.Log("host ip: " + sharedLocalIpAddress);
         NetworkManager.Singleton.GetComponent<UnityTransport>().ConnectionData.Address = sharedLocalIpAddress;
         NetworkManager.Singleton.GetComponent<UnityTransport>().ConnectionData.Port = (ushort)7777;
-
         deviceIpAddress.text = sharedLocalIpAddress;
         ipTextField.text = "";
 
@@ -38,6 +39,8 @@ public class NetworkManagerScript : MonoBehaviour
     public void StartHost() 
     {
         Start();
+        SetMaxPacketQueueSize();
+        SetMaxPayloadSize();
         NetworkManager.Singleton.StartHost();
     }
 
@@ -45,6 +48,8 @@ public class NetworkManagerScript : MonoBehaviour
     {
         string ipAddress = ipTextField.text;
         Debug.Log("client ip: " + ipAddress);
+        SetMaxPacketQueueSize();
+        SetMaxPayloadSize();
         NetworkManager.Singleton.GetComponent<UnityTransport>().ConnectionData.Address = ipAddress;
         NetworkManager.Singleton.GetComponent<UnityTransport>().ConnectionData.Port = (ushort)7777;
         NetworkManager.Singleton.StartClient();
@@ -132,4 +137,75 @@ public class NetworkManagerScript : MonoBehaviour
         
         hisFaceObject.UpdateExpressionWeightFromRemote(incomingData);
     }
+
+
+    private void SetMaxPayloadSize()
+    {
+        string input = maxPayload.text.Trim();
+
+        if (string.IsNullOrEmpty(input))
+        {
+            Debug.LogWarning("Input is empty. Defaulting to 1400.");
+            NetworkManager.Singleton.GetComponent<UnityTransport>().MaxPayloadSize = 1400;
+            return;
+        }
+
+        
+        if (int.TryParse(input, out int payloadSize))
+        {
+            
+            if (payloadSize > 0)
+            {
+                Debug.Log("TTT, SetMaxPayloadSize(), maxPayload = " + maxPayload.text);
+                NetworkManager.Singleton.GetComponent<UnityTransport>().MaxPayloadSize = payloadSize;
+            }
+            else
+            {
+                Debug.LogWarning("Invalid number. Payload size must be greater than 0. Defaulting to 1400.");
+                NetworkManager.Singleton.GetComponent<UnityTransport>().MaxPayloadSize = 1400;
+            }
+        }
+        else
+        {
+            
+            Debug.LogWarning("Invalid Max Payload Size. Please enter a valid number. Defaulting to 1400.");
+            NetworkManager.Singleton.GetComponent<UnityTransport>().MaxPayloadSize = 1400;
+        }
+    }
+
+
+    private void SetMaxPacketQueueSize()
+    {
+        string input = maxPacketQueue.text.Trim();
+
+        
+        if (string.IsNullOrEmpty(input))
+        {
+            Debug.LogWarning("TTT, Input is empty. Defaulting to 128.");
+            NetworkManager.Singleton.GetComponent<UnityTransport>().MaxPacketQueueSize = 128;
+            return;
+        }
+
+       
+        if (int.TryParse(input, out int packetQueueSize))
+        {
+            if (packetQueueSize > 0)
+            {
+                Debug.Log("TTT, SetMaxPacketQueueSize(), maxPacketQueue = " + maxPacketQueue.text);
+                NetworkManager.Singleton.GetComponent<UnityTransport>().MaxPacketQueueSize = packetQueueSize;
+            }
+            else
+            {
+                Debug.LogWarning("TTT, Invalid number. Packet queue size must be greater than 0. Defaulting to 128.");
+                NetworkManager.Singleton.GetComponent<UnityTransport>().MaxPacketQueueSize = 128;
+            }
+        }
+        else
+        {
+           
+            Debug.LogWarning("TTT, Invalid Max Packet Queue Size. Please enter a valid number. Defaulting to 128.");
+            NetworkManager.Singleton.GetComponent<UnityTransport>().MaxPacketQueueSize = 128;
+        }
+    }
+
 }
