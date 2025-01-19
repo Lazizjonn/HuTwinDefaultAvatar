@@ -4,7 +4,6 @@ using Unity.Netcode.Transports.UTP;
 using System.Net;
 using AddressFamily = System.Net.Sockets.AddressFamily;
 using TMPro;
-using Oculus.Movement.Tracking;
 
 public class NetworkManagerScript : MonoBehaviour
 {
@@ -26,16 +25,17 @@ public class NetworkManagerScript : MonoBehaviour
         deviceIpAddress.text = sharedLocalIpAddress;
         ipTextField.text = "";
 
-        NetworkManager.Singleton.OnClientConnectedCallback += OnNewClientConnected;
+        GameObject taskObject = GameObject.FindGameObjectWithTag("TaskProgression");
+        NetworkManager.Singleton.OnClientConnectedCallback += taskObject.GetComponent<FaceDataExchangeScript>().OnNewClientConnected;
     }
 
     // Update is called once per frame
     void Update()
     {
-        UpdateFaceExpression();
+        //
     }
 
-    public void StartHost() 
+    public void StartHost()
     {
         Start();
         NetworkManager.Singleton.StartHost();
@@ -69,67 +69,5 @@ public class NetworkManagerScript : MonoBehaviour
 
         Debug.LogError("FindIpAddress(): No network adapters with an IPv4 address in the system!");
         return sharedLocalIpAddress;
-    }
-
-
-    // ===================================================================================================== //
-    GameObject[] onlinePlayers;
-
-    private MyCorrectivesFace myFaceObject;
-    private MyCorrectivesFace hisFaceObject;
-
-    private float[] myExpressions;
-    private void OnNewClientConnected(ulong clientId)
-    {
-        onlinePlayers = GameObject.FindGameObjectsWithTag("FidelityPlayer");
-        Debug.LogError("--- OnNewClientConnected(), onlinePlayers.Length: " + onlinePlayers.Length);
-        foreach (var player in onlinePlayers)
-        {
-            Debug.LogError("--- OnNewClientConnected(),  player.IsLocalPlayer: " + player.GetComponent<NetworkObject>().IsLocalPlayer);
-            if (player.GetComponent<NetworkObject>().IsLocalPlayer == true)
-            {
-                myFaceObject = player.GetComponentInChildren<MyCorrectivesFace>();
-            }
-            else
-            {
-                hisFaceObject = player.GetComponentInChildren<MyCorrectivesFace>();
-            }
-        }
-    }
-
-    private void UpdateFaceExpression()
-    {
-        if (onlinePlayers != null && onlinePlayers.Length >= 1)
-        {
-            Debug.LogError("--- UpdateFaceExpression(), onlinePlayers.Length: " + onlinePlayers.Length);
-
-            myExpressions = myFaceObject.PrepareRemoteExpressionWeights();
-            Debug.LogError("--- UpdateFaceExpression(), myExpressions.array.Length: " + myExpressions.Length);
-            
-            Debug.LogError("--- UpdateFaceExpression(), NetworkManager.IsHost: " + NetworkManager.Singleton.IsHost);
-            
-            SetExpressionPlayerServerRpc(myExpressions);
-           /* if (NetworkManager.Singleton.IsHost)
-               
-                //SetExpressionPlayerClientRpc(myExpressions);
-            else
-                SetExpressionPlayerServerRpc(myExpressions);*/
-        }
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    private void SetExpressionPlayerServerRpc(float[] incomingData)
-    {
-        //hisFaceObject.UpdateExpressionWeightFromRemote(incomingData);
-        myFaceObject.UpdateExpressionWeightFromRemote(incomingData);
-    }
-
-    [ClientRpc]
-    private void SetExpressionPlayerClientRpc(float[] incomingData)
-    {
-        if (NetworkManager.Singleton.IsHost)
-            return;
-        
-        hisFaceObject.UpdateExpressionWeightFromRemote(incomingData);
     }
 }
