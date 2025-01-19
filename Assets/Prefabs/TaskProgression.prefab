@@ -1,0 +1,240 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1408991761264415717
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3717193312675522164}
+  - component: {fileID: 7889430784801555470}
+  - component: {fileID: 3731618711560902585}
+  - component: {fileID: 8188851050087849514}
+  - component: {fileID: 4492898585542166296}
+  - component: {fileID: 6903335825169786310}
+  - component: {fileID: 8758065243103796609}
+  - component: {fileID: 360735803277038910}
+  - component: {fileID: 7646238942182728857}
+  m_Layer: 0
+  m_Name: TaskProgression
+  m_TagString: TaskProgression
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3717193312675522164
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408991761264415717}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.21019055, y: 0.93146497, z: -0.3313576}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7889430784801555470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408991761264415717}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbb956339fad5ce41b8e5b08602159ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  setup: 0
+  cheeseGrating: {fileID: 0}
+  instructionText: {fileID: 0}
+  InteractablesSingleUser: {fileID: 0}
+  InteractablesMultiUser: {fileID: 0}
+  sessionID: 4
+  test: 1
+  SingleUser: 1
+--- !u!114 &3731618711560902585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408991761264415717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a7b367d69623db42994f6d9e160507a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  doughBallPrefab: {fileID: 750787466140276302, guid: d414b41c124bf9540b3773b5252d7787, type: 3}
+  pizzaPrefab: {fileID: 6522383846198793267, guid: 8b0576258b693d94280916682af04745, type: 3}
+  sausageSlicePrefab: {fileID: 1890933117422231642, guid: 586781efcca3f0040ba73a40c928ba01, type: 3}
+  sausageSliceGhostPrefab: {fileID: 1890933117422231642, guid: 2140991764cec5447a9182a6d12d4d0c, type: 3}
+  pepperSlicePrefab: {fileID: 5207194738411119604, guid: 416df14ecd0e91240b0d059fcde07b17, type: 3}
+  pepperSliceGhostPrefab: {fileID: 5207194738411119604, guid: 4856f29946370534db2929592f11b5ad, type: 3}
+  _doughBall: {fileID: 0}
+  _pizza: {fileID: 0}
+--- !u!114 &8188851050087849514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408991761264415717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 4232604063
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
+--- !u!114 &4492898585542166296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408991761264415717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2366a54e90859b4dbf46762344efcf5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  doughBallPrefab: {fileID: 750787466140276302, guid: d414b41c124bf9540b3773b5252d7787, type: 3}
+  pizzaPrefab: {fileID: 6522383846198793267, guid: 8b0576258b693d94280916682af04745, type: 3}
+  pizzaDoughBallPrefab: {fileID: 7485148084349450024, guid: 2567fd9ce357d884abd1cf8da81c4533, type: 3}
+  pizzaCrustPrefab: {fileID: 9071561506722755892, guid: 12d5c515d18fada40b3c70f612b3635d, type: 3}
+  sausageSlicePrefab: {fileID: 1890933117422231642, guid: 586781efcca3f0040ba73a40c928ba01, type: 3}
+  sausageSliceGhostPrefab: {fileID: 1890933117422231642, guid: 2140991764cec5447a9182a6d12d4d0c, type: 3}
+  pepperSlicePrefab: {fileID: 5207194738411119604, guid: 416df14ecd0e91240b0d059fcde07b17, type: 3}
+  pepperSliceGhostPrefab: {fileID: 5207194738411119604, guid: 4856f29946370534db2929592f11b5ad, type: 3}
+  _doughBall: {fileID: 0}
+  _pizzaDoughBall: {fileID: 7485148084349450024, guid: 2567fd9ce357d884abd1cf8da81c4533, type: 3}
+  _pizzaCrust: {fileID: 9071561506722755892, guid: 12d5c515d18fada40b3c70f612b3635d, type: 3}
+--- !u!114 &6903335825169786310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408991761264415717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac0dc8528b31d4f4aa9465e351c1dd69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8758065243103796609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408991761264415717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d0f2d689265cd4498d8b9beec080c68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  _enter:
+    m_InternalValue: 0
+  _out:
+    m_InternalValue: 0
+--- !u!114 &360735803277038910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408991761264415717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 625dcf49798b99f46ad1ed68eb6fe056, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  instructionText: {fileID: 0}
+  canvas: {fileID: 0}
+  VRcamera: {fileID: 0}
+  pizza: {fileID: 0}
+  cheeseGrating: {fileID: 0}
+  ExperimentNameInput: {fileID: 0}
+  ExperimentSettingInput: {fileID: 0}
+  gameStarted:
+    m_InternalValue: 0
+  doughKneaded:
+    m_InternalValue: 0
+  doughSpread:
+    m_InternalValue: 0
+  waterFilled:
+    m_InternalValue: 0
+  flourFilled:
+    m_InternalValue: 0
+  tomatoSpread:
+    m_InternalValue: 0
+  sausagePizzaDone:
+    m_InternalValue: 0
+  bellPepperPizzaDone:
+    m_InternalValue: 0
+  doughPlaced:
+    m_InternalValue: 0
+  pizzaFinished:
+    m_InternalValue: 0
+  ovenOpen:
+    m_InternalValue: 0
+  pizzaInOven:
+    m_InternalValue: 0
+  pizzaBaked:
+    m_InternalValue: 0
+  finished:
+    m_InternalValue: 0
+  twoPlayers:
+    m_InternalValue: 0
+  timerRunning:
+    m_InternalValue: 0
+  cheeseGrated:
+    m_InternalValue: 0
+  kneadCounter:
+    m_InternalValue: 0
+  bellPepperCut:
+    m_InternalValue: 0
+  sausageCut:
+    m_InternalValue: 0
+  sausageOnPizza:
+    m_InternalValue: 0
+  bellPepperOnPizza:
+    m_InternalValue: 0
+  pizzaBakeTimer:
+    m_InternalValue: 10
+  sessionID: 0
+  setup: 0
+--- !u!114 &7646238942182728857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408991761264415717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c7a419c2ca26ec489b61eb1ff51486d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1

@@ -4,7 +4,6 @@ using Unity.Netcode.Transports.UTP;
 using System.Net;
 using AddressFamily = System.Net.Sockets.AddressFamily;
 using TMPro;
-using Oculus.Movement.Tracking;
 
 public class NetworkManagerScript : MonoBehaviour
 {
@@ -27,16 +26,17 @@ public class NetworkManagerScript : MonoBehaviour
         deviceIpAddress.text = sharedLocalIpAddress;
         ipTextField.text = "";
 
-        NetworkManager.Singleton.OnClientConnectedCallback += OnNewClientConnected;
+        GameObject taskObject = GameObject.FindGameObjectWithTag("TaskProgression");
+        NetworkManager.Singleton.OnClientConnectedCallback += taskObject.GetComponent<FaceDataExchangeScript>().OnNewClientConnected;
     }
 
     // Update is called once per frame
     void Update()
     {
-        UpdateFaceExpression();
+        //
     }
 
-    public void StartHost() 
+    public void StartHost()
     {
         Start();
         SetMaxPacketQueueSize();
@@ -150,10 +150,10 @@ public class NetworkManagerScript : MonoBehaviour
             return;
         }
 
-        
+
         if (int.TryParse(input, out int payloadSize))
         {
-            
+
             if (payloadSize > 0)
             {
                 Debug.Log("TTT, SetMaxPayloadSize(), maxPayload = " + maxPayload.text);
@@ -167,7 +167,7 @@ public class NetworkManagerScript : MonoBehaviour
         }
         else
         {
-            
+
             Debug.LogWarning("Invalid Max Payload Size. Please enter a valid number. Defaulting to 1400.");
             NetworkManager.Singleton.GetComponent<UnityTransport>().MaxPayloadSize = 1400;
         }
@@ -178,7 +178,7 @@ public class NetworkManagerScript : MonoBehaviour
     {
         string input = maxPacketQueue.text.Trim();
 
-        
+
         if (string.IsNullOrEmpty(input))
         {
             Debug.LogWarning("TTT, Input is empty. Defaulting to 128.");
@@ -186,7 +186,7 @@ public class NetworkManagerScript : MonoBehaviour
             return;
         }
 
-       
+
         if (int.TryParse(input, out int packetQueueSize))
         {
             if (packetQueueSize > 0)
@@ -202,7 +202,7 @@ public class NetworkManagerScript : MonoBehaviour
         }
         else
         {
-           
+
             Debug.LogWarning("TTT, Invalid Max Packet Queue Size. Please enter a valid number. Defaulting to 128.");
             NetworkManager.Singleton.GetComponent<UnityTransport>().MaxPacketQueueSize = 128;
         }
