@@ -15,7 +15,7 @@ public class NetworkManagerScript : MonoBehaviour
     void Start()
     {
         QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = 10;
+        Application.targetFrameRate = 20;
 
         sharedLocalIpAddress = FindIpAddress();
         Debug.Log("host ip: " + sharedLocalIpAddress);

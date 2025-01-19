@@ -646,9 +646,6 @@ PrefabInstance:
       addedObject: {fileID: 3403650286492731026}
     - targetCorrespondingSourceObject: {fileID: -8117902096667820465, guid: e90520f3b2e75c34b84d96e20091eb25, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6143497093486642898}
-    - targetCorrespondingSourceObject: {fileID: -8117902096667820465, guid: e90520f3b2e75c34b84d96e20091eb25, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 5012772446629224455}
     - targetCorrespondingSourceObject: {fileID: -1486606417492281406, guid: e90520f3b2e75c34b84d96e20091eb25, type: 3}
       insertIndex: -1
@@ -2763,28 +2760,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a95044baf65b10c4e89b246d2f881ac9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &6143497093486642898
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2468398608588744717}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1db9ba201942f24497cb98e7a9b59f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _faceExpressions: {fileID: -7910810612642639478}
-  _blendShapeStrengthMultiplier: 100
-  _mappings: 00000000
-  retargetingType: 0
-  _allowDuplicateMapping: 1
-  _forceJawDropForTongue: 1
-  _tongueOutThreshold: 0.25
-  _minJawDrop: 0.5
-  _blendshapeModifier: {fileID: 0}
-  _combinationShapesTextAsset: {fileID: 0}
 --- !u!114 &5012772446629224455
 MonoBehaviour:
   m_ObjectHideFlags: 0
