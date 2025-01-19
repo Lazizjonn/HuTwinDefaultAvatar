@@ -24,8 +24,7 @@ public class FaceDataExchangeScript : NetworkBehaviour
     public void OnNewClientConnected(ulong clientId)
     {
         onlinePlayers = GameObject.FindGameObjectsWithTag("FidelityPlayer");
-        Debug.LogError("--- OnNewClientConnected(), onlinePlayers.Length: " + onlinePlayers.Length);
-        
+        Debug.LogError("--- OnNewClientConnected(), onlinePlayers.Length: " + onlinePlayers.Length);        
         foreach (var player in onlinePlayers)
         {
             if (player.GetComponent<NetworkObject>().IsLocalPlayer == true)
@@ -40,10 +39,8 @@ public class FaceDataExchangeScript : NetworkBehaviour
 
     private void UpdateFaceExpression()
     {
-        if (NetworkManager.Singleton != null && onlinePlayers != null && onlinePlayers.Length >= 1)
+        if (NetworkManager.Singleton != null && myFaceObject != null && hisFaceObject != null)
         {
-            Debug.LogError("--- UpdateFaceExpression(), onlinePlayers.Length: " + onlinePlayers.Length);
-
             myExpressions = myFaceObject.PrepareRemoteExpressionWeights();
             Debug.LogError("--- UpdateFaceExpression(), myExpressions.array.Length: " + myExpressions.Length);
 

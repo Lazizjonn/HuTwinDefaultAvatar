@@ -51,6 +51,11 @@ public class NetworkManagerScript : MonoBehaviour
         Debug.Log("client ip: " + ipAddress);
         SetMaxPacketQueueSize();
         SetMaxPayloadSize();
+
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 20;
+
+
         NetworkManager.Singleton.GetComponent<UnityTransport>().ConnectionData.Address = ipAddress;
         NetworkManager.Singleton.GetComponent<UnityTransport>().ConnectionData.Port = (ushort)7777;
         NetworkManager.Singleton.StartClient();
@@ -91,7 +96,6 @@ public class NetworkManagerScript : MonoBehaviour
 
         if (int.TryParse(input, out int payloadSize))
         {
-
             if (payloadSize > 0)
             {
                 Debug.Log("TTT, SetMaxPayloadSize(), maxPayload = " + maxPayload.text);
@@ -105,7 +109,6 @@ public class NetworkManagerScript : MonoBehaviour
         }
         else
         {
-
             Debug.LogWarning("Invalid Max Payload Size. Please enter a valid number. Defaulting to 1400.");
             NetworkManager.Singleton.GetComponent<UnityTransport>().MaxPayloadSize = 1400;
         }
@@ -115,7 +118,6 @@ public class NetworkManagerScript : MonoBehaviour
     private void SetMaxPacketQueueSize()
     {
         string input = maxPacketQueue.text.Trim();
-
 
         if (string.IsNullOrEmpty(input))
         {
@@ -140,7 +142,6 @@ public class NetworkManagerScript : MonoBehaviour
         }
         else
         {
-
             Debug.LogWarning("TTT, Invalid Max Packet Queue Size. Please enter a valid number. Defaulting to 128.");
             NetworkManager.Singleton.GetComponent<UnityTransport>().MaxPacketQueueSize = 128;
         }
