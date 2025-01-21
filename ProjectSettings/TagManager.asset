@@ -23,6 +23,13 @@ TagManager:
   - FidelityPlayer
   - FaceExprManager
   - TaskProgression
+  - ClientShare
+  - HostShare
+  - FaceShareTransitionObj
+  - clientShare1
+  - clientShare2
+  - hostShare2
+  - hostShare1
   layers:
   - Default
   - TransparentFX
