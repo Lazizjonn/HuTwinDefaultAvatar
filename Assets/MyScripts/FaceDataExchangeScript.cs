@@ -1,14 +1,15 @@
 using UnityEngine;
 using Unity.Netcode;
 using Oculus.Movement.Tracking;
+using System.Collections;
 
 [System.Serializable]
 public class FaceDataExchangeScript : MonoBehaviour
 {
     private GameObject[] onlinePlayers;
 
-    [SerializeField] public ClientShareScript clientFaceShareScript;
-    [SerializeField] public HostShareScript hostFaceShareScript;
+    public ClientShareScript clientFaceShareScript;
+    public HostShareScript hostFaceShareScript;
 
     private CorrectivesFace myFaceObject;
     private CorrectivesFace hisFaceObject;
@@ -28,15 +29,59 @@ public class FaceDataExchangeScript : MonoBehaviour
     public void OnNewClientConnected(ulong clientId)
     {
         onlinePlayers = GameObject.FindGameObjectsWithTag("FidelityPlayer");
-        Debug.LogError("--- OnNewClientConnected(), onlinePlayers.Length: " + onlinePlayers.Length);        
+        Debug.LogError("--- OnNewClientConnected(), onlinePlayers.Length: " + onlinePlayers.Length);
+
+        // disable unneded scripts first
         foreach (var player in onlinePlayers)
         {
-            if (player.GetComponent<NetworkObject>().IsLocalPlayer == true)
+            if (player.GetComponent<NetworkObject>().IsLocalPlayer == true)     // local player
             {
                 myFaceObject = player.GetComponentInChildren<CorrectivesFace>();
-            } else
+
+                if (NetworkManager.Singleton.IsHost)                            // if true means - this is my local player and I am host
+                {
+                    // keep needed script reference
+                    hostFaceShareScript = player.GetComponentInChildren<HostShareScript>();
+
+                    // disable unnecessary empty object
+                    player.GetComponentInChildren<ClientShareScript>().enabled = false;
+                }
+                else                                                            // means - this is my local player and I am client
+                {
+                    // keep needed script reference
+                    clientFaceShareScript = player.GetComponentInChildren<ClientShareScript>();
+
+                    // disable unnecessary empty object
+                    player.GetComponentInChildren<HostShareScript>().enabled = false;
+                }
+            }
+        }
+
+        // Wait a bit
+        //StartCoroutine(DelayAction(0.1f));
+
+        foreach (var player in onlinePlayers)
+        {
+            if (player.GetComponent<NetworkObject>().IsLocalPlayer == false)    // not local player
             {
                 hisFaceObject = player.GetComponentInChildren<CorrectivesFace>();
+
+                if (clientFaceShareScript == null)                              //if true means - this is remote player and client, not host.
+                {
+                    // keep needed script reference
+                    clientFaceShareScript = player.GetComponentInChildren<ClientShareScript>();
+
+                    // disable unnecessary empty object
+                    player.GetComponentInChildren<HostShareScript>().enabled = false;
+                }
+                else                                                            // means - this is remote player and host, not client.
+                {
+                    // keep needed script reference
+                    hostFaceShareScript = player.GetComponentInChildren<HostShareScript>();
+
+                    // disable unnecessary empty object
+                    player.GetComponentInChildren<ClientShareScript>().enabled = false;
+                }
             }
         }
     }
@@ -83,6 +128,14 @@ public class FaceDataExchangeScript : MonoBehaviour
 
         float[] data = hostFaceShareScript.GetFaceData();
         hisFaceObject.UpdateExpressionWeightFromRemote(data);
+    }
+
+    IEnumerator DelayAction(float delayTime)
+    {
+        //Wait for the specified delay time before continuing.
+        yield return new WaitForSeconds(delayTime);
+
+        //Do the action after the delay time has finished.
     }
 
 
