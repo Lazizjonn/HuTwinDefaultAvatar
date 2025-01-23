@@ -2,7 +2,7 @@ using UnityEngine;
 using Unity.Netcode;
 
 
-public class AttachToCamera : NetworkBehaviour
+public class AttachToCamera : MonoBehaviour
 {
     private GameObject cameraRig;
 

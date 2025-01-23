@@ -655,17 +655,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3714998173258631572, guid: eec3b5f727d10be46a939047ae964295, type: 3}
   m_PrefabInstance: {fileID: 8789817802212154727}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &47234172 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5836617335432361448, guid: eec3b5f727d10be46a939047ae964295, type: 3}
-  m_PrefabInstance: {fileID: 8789817802212154727}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 47234170}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53990f4ddb018354b9ed5522da4dadd7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &48583081
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6598,8 +6587,6 @@ MonoBehaviour:
   ipTextField: {fileID: 7800093629265376727}
   maxPayload: {fileID: 1808445365}
   maxPacketQueue: {fileID: 1005785349}
-  clientFaceSharePrefab: {fileID: 0}
-  hostFaceSharePrefab: {fileID: 0}
 --- !u!114 &993580012
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12846,17 +12833,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1492409761488572111, guid: a33c92bdaa630e34ea6d51675981dad4, type: 3}
   m_PrefabInstance: {fileID: 7112066575073890878}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1908905135 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3782592954256766070, guid: a33c92bdaa630e34ea6d51675981dad4, type: 3}
-  m_PrefabInstance: {fileID: 7112066575073890878}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03f3863acf941eb44ba918b70c6a3659, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1910264346
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20969,11 +20945,11 @@ PrefabInstance:
     - target: {fileID: 7646238942182728857, guid: 5a4fd2d813641f948919e7e4d1e839bb, type: 3}
       propertyPath: hostFaceShareScript
       value: 
-      objectReference: {fileID: 1908905135}
+      objectReference: {fileID: 0}
     - target: {fileID: 7646238942182728857, guid: 5a4fd2d813641f948919e7e4d1e839bb, type: 3}
       propertyPath: clientFaceShareScript
       value: 
-      objectReference: {fileID: 47234172}
+      objectReference: {fileID: 0}
     - target: {fileID: 7889430784801555470, guid: 5a4fd2d813641f948919e7e4d1e839bb, type: 3}
       propertyPath: instructionText
       value: 

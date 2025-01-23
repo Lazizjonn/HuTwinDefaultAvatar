@@ -1,6 +1,7 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public class HostShareScript : MonoBehaviour
+public class HostShareScript : NetworkBehaviour
 {
     [SerializeField] GameObject hostShare1, hostShare2, hostShare3, hostShare4, hostShare5,
         hostShare6, hostShare7, hostShare8, hostShare9, hostShare10, hostShare11;

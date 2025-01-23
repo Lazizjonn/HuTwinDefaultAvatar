@@ -4,12 +4,12 @@ using Oculus.Movement.Tracking;
 using System.Collections;
 
 [System.Serializable]
-public class FaceDataExchangeScript : MonoBehaviour
+public class FaceDataExchangeScript : NetworkBehaviour
 {
     private GameObject[] onlinePlayers;
 
-    public ClientShareScript clientFaceShareScript;
-    public HostShareScript hostFaceShareScript;
+    private ClientShareScript clientFaceShareScript;
+    private HostShareScript hostFaceShareScript;
 
     private CorrectivesFace myFaceObject;
     private CorrectivesFace hisFaceObject;
@@ -96,16 +96,16 @@ public class FaceDataExchangeScript : MonoBehaviour
 
             if (NetworkManager.Singleton.IsHost)
             {
-                SetExpressionPlayerServerRpc(myExpressions);
+                SetExpressionPlayerServer(myExpressions);
             }
             else
             {
-                SetExpressionPlayerClientRpc(myExpressions);
+                SetExpressionPlayerClient(myExpressions);
             }
         }
     }
 
-    private void SetExpressionPlayerServerRpc(float[] hostData)
+    private void SetExpressionPlayerServer(float[] hostData)
     {
         hostFaceShareScript.SetFaceData(hostData);
 
@@ -120,7 +120,7 @@ public class FaceDataExchangeScript : MonoBehaviour
         myFaceObject.UpdateExpressionWeightFromRemote(data);*/
     }
 
-    private void SetExpressionPlayerClientRpc(float[] clientData)
+    private void SetExpressionPlayerClient(float[] clientData)
     {
         if (NetworkManager.Singleton.IsHost) { return; }
 
