@@ -27,8 +27,18 @@ public class NetworkManagerScript : MonoBehaviour
         deviceIpAddress.text = sharedLocalIpAddress;
         ipTextField.text = "";
 
-        GameObject taskObject = GameObject.FindGameObjectWithTag("TaskProgression");
-        NetworkManager.Singleton.OnClientConnectedCallback += taskObject.GetComponent<FaceDataExchangeScript>().OnNewClientConnected;
+        //GameObject taskObject = GameObject.FindGameObjectWithTag("TaskProgression");
+        //NetworkManager.Singleton.OnClientConnectedCallback += taskObject.GetComponent<FaceDataExchangeScript>().OnNewClientConnected;
+        NetworkManager.Singleton.OnClientConnectedCallback += OnNewClientConnected;
+    }
+
+    public void OnNewClientConnected(ulong clientId)
+    {
+        GameObject[] onlinePlayers = GameObject.FindGameObjectsWithTag("FidelityPlayer");
+        foreach (var player in onlinePlayers)
+        {
+            player.GetComponentInChildren<FaceDataExchangeScript>().OnNewClientConnected(clientId);
+        }
     }
 
     // Update is called once per frame
