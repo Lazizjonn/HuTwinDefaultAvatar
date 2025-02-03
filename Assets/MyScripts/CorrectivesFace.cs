@@ -197,7 +197,25 @@ namespace Oculus.Movement.Tracking
         /// </summary>
         protected override void Update()
         {
-            //
+            /*if (ExpressionWeights == null ||
+                ExpressionWeights.Length != (int)OVRFaceExpressions.FaceExpression.Max)
+            {
+                InitializeExpressionWeights();
+            }
+
+            if (_faceExpressions.enabled &&
+                _faceExpressions.FaceTrackingEnabled &&
+                _faceExpressions.ValidExpressions)
+            {
+                UpdateExpressionWeights();
+                InitializeCachedValues();
+                UpdateCachedMeshValues();
+                if (_correctivesModule != null && CorrectivesEnabled)
+                {
+                    _correctivesModule.ApplyCorrectives(_cachedBlendshapeValues);
+                }
+                UpdateSkinnedMesh();
+            }*/
         }
 
         /// <summary>

@@ -2,7 +2,7 @@ using System;
 using Unity.Netcode;
 using UnityEngine;
 
-public class ClientShareScript : NetworkBehaviour // MonoBehaviour
+public class ClientShareScript : NetworkBehaviour
 {
     [SerializeField] GameObject clientShare1, clientShare2, clientShare3, clientShare4, clientShare5, 
         clientShare6, clientShare7, clientShare8, clientShare9, clientShare10, clientShare11;
