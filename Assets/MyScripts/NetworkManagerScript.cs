@@ -27,8 +27,6 @@ public class NetworkManagerScript : MonoBehaviour
         deviceIpAddress.text = sharedLocalIpAddress;
         ipTextField.text = "";
 
-        //GameObject taskObject = GameObject.FindGameObjectWithTag("TaskProgression");
-        //NetworkManager.Singleton.OnClientConnectedCallback += taskObject.GetComponent<FaceDataExchangeScript>().OnNewClientConnected;
         NetworkManager.Singleton.OnClientConnectedCallback += OnNewClientConnected;
     }
 
