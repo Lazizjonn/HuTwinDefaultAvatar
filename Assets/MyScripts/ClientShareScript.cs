@@ -2,40 +2,10 @@ using System;
 using Unity.Netcode;
 using UnityEngine;
 
-public class ClientShareScript : NetworkBehaviour
+public class ClientShareScript : NetworkBehaviour // MonoBehaviour
 {
-    //float a1, a2, a3, a4, a5, a6, a7, a8, a9;
-
     [SerializeField] GameObject clientShare1, clientShare2, clientShare3, clientShare4, clientShare5, 
         clientShare6, clientShare7, clientShare8, clientShare9, clientShare10, clientShare11;
-
-    /*public float Updater
-    {
-        get { return Updater; }
-        set { Updated(); }
-    }
-
-    public void Updated()
-    {
-        //Debug.LogError($"--- Updated, listWidth[6]: { String.Join(", ", GetValues())}");
-    }*/
-
-    /*void Start()
-    {
-        //
-    }*/
-
-    /*// Update is called once per frame
-    void Update()
-    {
-        //float a = UnityEngine.Random.Range(0.0f, 1.0f);
-
-        //float[] data = new float[] { a, a, a, a, a, a };
-
-        //SetFaceData(data);
-
-        //Thread.Sleep(100);
-    }*/
 
     public void SetFaceData(float[] data)
     {

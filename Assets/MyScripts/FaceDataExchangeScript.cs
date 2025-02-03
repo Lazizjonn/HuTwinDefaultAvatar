@@ -1,15 +1,16 @@
 using UnityEngine;
 using Unity.Netcode;
 using Oculus.Movement.Tracking;
-using System.Collections;
 
 [System.Serializable]
-public class FaceDataExchangeScript : NetworkBehaviour
+public class FaceDataExchangeScript : NetworkBehaviour // MonoBehaviour
 {
     private GameObject[] onlinePlayers;
 
     private ClientShareScript clientFaceShareScript;
     private HostShareScript hostFaceShareScript;
+
+    [SerializeField] public GameObject myPlayer;
 
     private CorrectivesFace myFaceObject;
     private CorrectivesFace hisFaceObject;
@@ -18,6 +19,11 @@ public class FaceDataExchangeScript : NetworkBehaviour
     void Start()
     {
         //
+        hostFaceShareScript = GameObject.FindGameObjectWithTag("FaceShareTransitionObj").GetComponentInChildren<HostShareScript>();
+        clientFaceShareScript = GameObject.FindGameObjectWithTag("FaceShareTransitionObj").GetComponentInChildren<ClientShareScript>();
+
+        myFaceObject = myPlayer.GetComponentInChildren<CorrectivesFace>();
+        Debug.LogError("--- Start(), this.GetInstanceID: " + this.GetInstanceID() + ", this.NetworkObjectId" + this.NetworkObjectId);
     }
 
     // Update is called once per frame
@@ -29,59 +35,17 @@ public class FaceDataExchangeScript : NetworkBehaviour
     public void OnNewClientConnected(ulong clientId)
     {
         onlinePlayers = GameObject.FindGameObjectsWithTag("FidelityPlayer");
-        Debug.LogError("--- OnNewClientConnected(), onlinePlayers.Length: " + onlinePlayers.Length);
-
-        // disable unneded scripts first
         foreach (var player in onlinePlayers)
         {
-            if (player.GetComponent<NetworkObject>().IsLocalPlayer == true)     // local player
+            if (player.GetComponent<NetworkObject>().IsLocalPlayer == true)
             {
                 myFaceObject = player.GetComponentInChildren<CorrectivesFace>();
-
-                if (NetworkManager.Singleton.IsHost)                            // if true means - this is my local player and I am host
-                {
-                    // keep needed script reference
-                    hostFaceShareScript = player.GetComponentInChildren<HostShareScript>();
-
-                    // disable unnecessary empty object
-                    player.GetComponentInChildren<ClientShareScript>().enabled = false;
-                }
-                else                                                            // means - this is my local player and I am client
-                {
-                    // keep needed script reference
-                    clientFaceShareScript = player.GetComponentInChildren<ClientShareScript>();
-
-                    // disable unnecessary empty object
-                    player.GetComponentInChildren<HostShareScript>().enabled = false;
-                }
+                Debug.LogError("--- + OnNewClientConnected(), myFaceObject is Null: " + (myFaceObject == null) + ", this.GetInstanceID: " + this.GetInstanceID() + ", this.NetworkObjectId" + this.NetworkObjectId);
             }
-        }
-
-        // Wait a bit
-        //StartCoroutine(DelayAction(0.1f));
-
-        foreach (var player in onlinePlayers)
-        {
-            if (player.GetComponent<NetworkObject>().IsLocalPlayer == false)    // not local player
+            else
             {
                 hisFaceObject = player.GetComponentInChildren<CorrectivesFace>();
-
-                if (clientFaceShareScript == null)                              //if true means - this is remote player and client, not host.
-                {
-                    // keep needed script reference
-                    clientFaceShareScript = player.GetComponentInChildren<ClientShareScript>();
-
-                    // disable unnecessary empty object
-                    player.GetComponentInChildren<HostShareScript>().enabled = false;
-                }
-                else                                                            // means - this is remote player and host, not client.
-                {
-                    // keep needed script reference
-                    hostFaceShareScript = player.GetComponentInChildren<HostShareScript>();
-
-                    // disable unnecessary empty object
-                    player.GetComponentInChildren<ClientShareScript>().enabled = false;
-                }
+                Debug.LogError("--- + OnNewClientConnected(), hisFaceObject is Null: " + (hisFaceObject == null) + ", this.GetInstanceID: " + this.GetInstanceID() + ", this.NetworkObjectId" + this.NetworkObjectId);
             }
         }
     }
@@ -91,9 +55,8 @@ public class FaceDataExchangeScript : NetworkBehaviour
         if (NetworkManager.Singleton != null && myFaceObject != null /*&& hisFaceObject != null*/)                 // ===================================
         {
             myExpressions = myFaceObject.PrepareRemoteExpressionWeights();
-            //Debug.LogError("--- UpdateFaceExpression(), myExpressions.array.Length: " + myExpressions.Length);
-            //clientFaceShareScript.SetFaceData(myExpressions);
-
+            Debug.LogError("--- UpdateFaceExpression(), myExpressions.array.Length: " + myExpressions.Length);
+            
             if (NetworkManager.Singleton.IsHost)
             {
                 SetExpressionPlayerServer(myExpressions);
@@ -107,51 +70,21 @@ public class FaceDataExchangeScript : NetworkBehaviour
 
     private void SetExpressionPlayerServer(float[] hostData)
     {
+        Debug.LogError("--- + SetExpressionPlayerServer(), hisFaceObject is Null: " + (hisFaceObject == null) + ", this.GetInstanceID: " + this.GetInstanceID() + ", this.NetworkObjectId" + this.NetworkObjectId);
         hostFaceShareScript.SetFaceData(hostData);
 
         float[] data = clientFaceShareScript.GetFaceData();
         hisFaceObject.UpdateExpressionWeightFromRemote(data);
-
-
-        // Local test
-        /*hostFaceShareScript.SetFaceData(hostData);
-
-        float[] data = hostFaceShareScript.GetFaceData();
-        myFaceObject.UpdateExpressionWeightFromRemote(data);*/
     }
 
     private void SetExpressionPlayerClient(float[] clientData)
     {
         if (NetworkManager.Singleton.IsHost) { return; }
 
+        Debug.LogError("--- + SetExpressionPlayerClient(), hisFaceObject is Null: " + (hisFaceObject == null) + ", this.GetInstanceID: " + this.GetInstanceID() + ", this.NetworkObjectId" + this.NetworkObjectId);
         clientFaceShareScript.SetFaceData(clientData);
 
         float[] data = hostFaceShareScript.GetFaceData();
         hisFaceObject.UpdateExpressionWeightFromRemote(data);
     }
-
-    IEnumerator DelayAction(float delayTime)
-    {
-        //Wait for the specified delay time before continuing.
-        yield return new WaitForSeconds(delayTime);
-
-        //Do the action after the delay time has finished.
-    }
-
-
-    /*//[Rpc(SendTo.Server)]
-    [ServerRpc]
-    private void SetExpressionPlayerServerRpc(float[] incomingData)
-    {
-        hisFaceObject.UpdateExpressionWeightFromRemote(incomingData);
-    }
-
-    //[Rpc(SendTo.NotServer)]
-    [ClientRpc]
-    private void SetExpressionPlayerClientRpc(float[] incomingData)
-    {
-        if (NetworkManager.Singleton.IsHost) { return; }
-        
-        hisFaceObject.UpdateExpressionWeightFromRemote(incomingData);
-    }*/
 }
