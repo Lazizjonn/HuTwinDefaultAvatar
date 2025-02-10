@@ -14556,6 +14556,10 @@ PrefabInstance:
       value: Bowl
       objectReference: {fileID: 0}
     - target: {fileID: 616665640532175016, guid: 98468ad0798348e42835bebf912980e1, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 616665640532175016, guid: 98468ad0798348e42835bebf912980e1, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -14605,11 +14609,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 616665641299767068, guid: 98468ad0798348e42835bebf912980e1, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 616665641299767069, guid: 98468ad0798348e42835bebf912980e1, type: 3}
       propertyPath: m_Constraints
       value: 126
+      objectReference: {fileID: 0}
+    - target: {fileID: 616665641579489454, guid: 98468ad0798348e42835bebf912980e1, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 616665642095837077, guid: 98468ad0798348e42835bebf912980e1, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 616665642095837077, guid: 98468ad0798348e42835bebf912980e1, type: 3}
       propertyPath: m_IsActive
