@@ -21,7 +21,7 @@ public class AttachToCamera : MonoBehaviour
 
     void Update()
     {
-        this.transform.position = cameraRig.transform.position + new Vector3(0, 1.1f, 0.06f);
+        this.transform.position = cameraRig.transform.position + new Vector3(0, 1.1f, 0.0f);
         this.transform.rotation = cameraRig.transform.rotation;
     }
 }
