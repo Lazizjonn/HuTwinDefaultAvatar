@@ -12,5 +12,3 @@ Import below samples:
 🚨 Move "Assets\MyScripts\CorrectivesFace.cs" (don't keep there 🪓) file to "Packages\com.meta.movement\Runtime\Scripts\Tracking\FaceTrackingData\CorrectivesFace.cs" directory as replacement (has getting and setting face expressions) and run.
 
 Note 🪧: Build an apk file with "it.cagliari.HuTwinDefaultAvatar" package name in Build Profiles setting panel.
-
-Todo 📋: RollingPin and Bowl with tomato has problem, fix it!

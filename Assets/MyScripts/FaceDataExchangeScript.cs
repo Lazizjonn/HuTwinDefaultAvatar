@@ -22,7 +22,6 @@ public class FaceDataExchangeScript : NetworkBehaviour
         clientFaceShareScript = GameObject.FindGameObjectWithTag("FaceShareTransitionObj").GetComponentInChildren<ClientShareScript>();
 
         myFaceObject = myPlayer.GetComponentsInChildren<CorrectivesFace>();
-        //Debug.LogError("--- Start(), this.GetInstanceID: " + this.GetInstanceID() + ", this.NetworkObjectId" + this.NetworkObjectId);
     }
 
     // Update is called once per frame
@@ -39,12 +38,10 @@ public class FaceDataExchangeScript : NetworkBehaviour
             if (player.GetComponent<NetworkObject>().IsLocalPlayer == true)
             {
                 myFaceObject = player.GetComponentsInChildren<CorrectivesFace>();
-                //Debug.LogError("--- + OnNewClientConnected(), myFaceObject is Null: " + (myFaceObject == null) + ", this.GetInstanceID: " + this.GetInstanceID() + ", this.NetworkObjectId" + this.NetworkObjectId);
             }
             else
             {
                 hisFaceObject = player.GetComponentsInChildren<CorrectivesFace>();
-                //Debug.LogError("--- + OnNewClientConnected(), hisFaceObject is Null: " + (hisFaceObject == null) + ", this.GetInstanceID: " + this.GetInstanceID() + ", this.NetworkObjectId" + this.NetworkObjectId);
             }
         }
     }
@@ -69,7 +66,6 @@ public class FaceDataExchangeScript : NetworkBehaviour
 
     private void SetExpressionPlayerServer(float[] hostData)
     {
-        //Debug.LogError("--- + SetExpressionPlayerServer(), hisFaceObject is Null: " + (hisFaceObject == null) + ", this.GetInstanceID: " + this.GetInstanceID() + ", this.NetworkObjectId" + this.NetworkObjectId);
         hostFaceShareScript.SetFaceData(hostData);
 
         float[] data = clientFaceShareScript.GetFaceData();
@@ -81,7 +77,6 @@ public class FaceDataExchangeScript : NetworkBehaviour
     {
         if (NetworkManager.Singleton.IsHost) { return; }
 
-        //Debug.LogError("--- + SetExpressionPlayerClient(), hisFaceObject is Null: " + (hisFaceObject == null) + ", this.GetInstanceID: " + this.GetInstanceID() + ", this.NetworkObjectId" + this.NetworkObjectId);
         clientFaceShareScript.SetFaceData(clientData);
 
         float[] data = hostFaceShareScript.GetFaceData();
