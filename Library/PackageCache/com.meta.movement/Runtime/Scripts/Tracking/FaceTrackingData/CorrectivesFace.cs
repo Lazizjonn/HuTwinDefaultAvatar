@@ -1,5 +1,6 @@
 // Copyright (c) Meta Platforms, Inc. and affiliates.
 
+using System;
 using Oculus.Interaction;
 using UnityEngine;
 
@@ -119,19 +120,6 @@ namespace Oculus.Movement.Tracking
             {
                 _correctivesModule = new CorrectivesModule(_combinationShapesTextAsset);
             }
-
-            /*faceExpressions = GetComponent<OVRFaceExpressions>();
-
-            if (faceExpressions == null)
-            {
-                Debug.LogError("TTT, OVRFaceExpressions component not found on this GameObject, Awake()");
-                enabled = false;
-                return;
-            }
-            else
-            {
-                Debug.LogError("TTT, OVRFaceExpressions component found on this GameObject, Awake()");
-            }*/
         }
 
         /// <summary>
@@ -310,7 +298,6 @@ namespace Oculus.Movement.Tracking
             var numBlendshapes = _cachedBlendshapeValues.Length;
             for (int blendShapeIndex = 0; blendShapeIndex < numBlendshapes; ++blendShapeIndex)
             {
-                Debug.LogError($"--- UpdateExpressionWeightFromRemote(), _cachedBlendshapeValues[{blendShapeIndex}]: {_cachedBlendshapeValues[blendShapeIndex]} ");
                 SkinnedMesh.SetBlendShapeWeight(blendShapeIndex, _cachedBlendshapeValues[blendShapeIndex]);
             }
         }
@@ -318,18 +305,13 @@ namespace Oculus.Movement.Tracking
         //=================================================================================================================================//
         public void UpdateExpressionWeightFromRemote(float[] remoteExpressionWeights)
         {
-            Debug.LogError("--- UpdateExpressionWeightFromRemote(), 1");
-
             // Initialize expression weights if null
             if (ExpressionWeights == null)
             {
                 InitializeExpressionWeights();
             }
 
-            Debug.LogError("--- UpdateExpressionWeightFromRemote(), 2");
-
             int numBlendshapes = SkinnedMesh.sharedMesh.blendShapeCount;
-            Debug.LogError("--- UpdateExpressionWeightFromRemote(), numBlendshapes length: " + numBlendshapes);
 
             // Ensure _cachedBlendshapeValues is initialized once
             if (_cachedBlendshapeValues == null)
@@ -354,7 +336,6 @@ namespace Oculus.Movement.Tracking
 
                 // Update expression weight from remote data
                 ExpressionWeights[(int)blendShapeToFaceExpression] = remoteExpressionWeights[(int)blendShapeToFaceExpression];
-                Debug.LogError($"--- UpdateExpressionWeightFromRemote(), ExpressionWeights[{(int)blendShapeToFaceExpression}]: {ExpressionWeights[(int)blendShapeToFaceExpression]} ");
 
                 float currentWeight = ExpressionWeights[(int)blendShapeToFaceExpression];
 
@@ -385,34 +366,19 @@ namespace Oculus.Movement.Tracking
                 // Store the modified weight in the cached values
                 _cachedBlendshapeValues[blendShapeIndex] = currentWeight * BlendShapeStrengthMultiplier;
 
-                Debug.LogError($"--- UpdateExpressionWeightFromRemote(), _cachedBlendshapeValues[{blendShapeIndex}]: {_cachedBlendshapeValues[blendShapeIndex]} ");
                 SkinnedMesh.SetBlendShapeWeight(blendShapeIndex, _cachedBlendshapeValues[blendShapeIndex]);
             }
-
-            /*// Apply correctives if enabled
-            if (_correctivesModule != null && CorrectivesEnabled)
-            {
-                _correctivesModule.ApplyCorrectives(_cachedBlendshapeValues);
-            }
-
-            // Update the SkinnedMesh with the final weights
-            for (int blendShapeIndex = 0; blendShapeIndex < numBlendshapes; ++blendShapeIndex)
-            {
-                Debug.LogError($"--- UpdateExpressionWeightFromRemote(), _cachedBlendshapeValues[{blendShapeIndex}]: {_cachedBlendshapeValues[blendShapeIndex]} ");
-                SkinnedMesh.SetBlendShapeWeight(blendShapeIndex, _cachedBlendshapeValues[blendShapeIndex]);
-            }*/
         }
 
         public float[] PrepareRemoteExpressionWeights()
         {
             if (_faceExpressions == null || !_faceExpressions.ValidExpressions)
             {
-                Debug.LogWarning("TTT, Invalid or null face expressions provided to PrepareRemoteExpressionWeights.");
                 return new float[(int)OVRFaceExpressions.FaceExpression.Max];
             }
 
             int numExpressions = (int)OVRFaceExpressions.FaceExpression.Max;
-            
+
             float[] remoteExpressionWeights = new float[numExpressions];
 
             int numBlendshapes = SkinnedMesh.sharedMesh.blendShapeCount;
@@ -427,7 +393,6 @@ namespace Oculus.Movement.Tracking
                 remoteExpressionWeights[(int)blendShapeToFaceExpression] = _faceExpressions[blendShapeToFaceExpression];
             }
 
-            Debug.Log("TTT, Prepared remote expression weights.");
             return remoteExpressionWeights;
         }
     }

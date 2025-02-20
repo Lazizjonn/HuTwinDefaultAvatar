@@ -25,7 +25,7 @@ public class ExpressionLogger : MonoBehaviour
 
         // Create a unique file name with a timestamp
         string timeStamp = DateTime.Now.ToString("yyyy_MM_dd_HH-mm-ss");
-        string fileName = $"expression_log_{timeStamp}.txt";
+        string fileName = $"face_log_{timeStamp}.txt";
 
         // Set the log file path to persistent data path with the unique file name
         logFilePath = Path.Combine(Application.persistentDataPath, fileName);
