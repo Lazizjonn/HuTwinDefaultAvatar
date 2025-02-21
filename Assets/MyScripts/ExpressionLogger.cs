@@ -3,9 +3,12 @@ using System.Threading;
 using UnityEngine;
 using System.IO;
 using System;
+using Unity.Netcode;
 
 public class ExpressionLogger : MonoBehaviour
 {
+    [SerializeField] GameObject player;
+
     private OVRFaceExpressions faceExpressions;
     private string logFilePath;
     private ConcurrentQueue<string> logQueue = new ConcurrentQueue<string>();
@@ -16,9 +19,10 @@ public class ExpressionLogger : MonoBehaviour
     {
         faceExpressions = GetComponent<OVRFaceExpressions>();
 
-        if (faceExpressions == null)
+        if (faceExpressions == null || player == null || (player != null && player.GetComponent<NetworkObject>().IsLocalPlayer == false))
         {
-            Debug.LogError("TTT, OVRFaceExpressions component not found on this GameObject, Start()");
+            Debug.LogError("TTT, ExpressionLogger::Start(), OVRFaceExpressions component not found on this GameObject, Start()");
+            Debug.LogError("TTT, ExpressionLogger::Start(), PLAYER: " + player.ToString() + ",   SCRIPT: " + this.ToString());
             enabled = false;
             return;
         }
@@ -53,14 +57,14 @@ public class ExpressionLogger : MonoBehaviour
 
                 // Enqueue the log entry
                 logQueue.Enqueue(logEntry);
-                Debug.Log("TTT, " + logEntry + ", Update()");
+                //Debug.Log("TTT, " + logEntry + ", Update()");
             }
         }
         else
         {
             string logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}: Face expressions are not valid.";
             logQueue.Enqueue(logEntry); // Log invalid state for future debugging
-            Debug.LogWarning("TTT, " + logEntry + ", Update()");
+            //Debug.LogWarning("TTT, " + logEntry + ", Update()");
         }
     }
 

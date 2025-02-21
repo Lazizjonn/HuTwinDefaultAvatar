@@ -3,9 +3,12 @@ using System.Threading;
 using UnityEngine;
 using System.IO;
 using System;
+using Unity.Netcode;
 
 public class BodyBoneLogger : MonoBehaviour
 {
+    [SerializeField] GameObject player;
+
     private OVRSkeleton skeleton;
     private string logFilePath;
     private ConcurrentQueue<string> logQueue = new ConcurrentQueue<string>();
@@ -16,9 +19,10 @@ public class BodyBoneLogger : MonoBehaviour
     {
         skeleton = GetComponent<OVRSkeleton>();
 
-        if (skeleton == null)
+        if (skeleton == null || player == null || (player != null && player.GetComponent<NetworkObject>().IsLocalPlayer == false))
         {
-            Debug.LogError("TTT, OVRSkeleton component not found on this GameObject, Start()");
+            Debug.LogError("TTT, BodyBoneLogger::Start(), OVRSkeleton component not found on this GameObject, Start()");
+            Debug.LogError("TTT, BodyBoneLogger::Start(), PLAYER: " + player.ToString() + ",   SCRIPT: " + this.ToString());
             enabled = false;
             return;
         }
@@ -54,7 +58,7 @@ public class BodyBoneLogger : MonoBehaviour
                     string logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}: Bone {bone.Id} - Position: (X: {position.x:F3}, Y: {position.y:F3}, Z: {position.z:F3}), Rotation: (X: {rotation.x:F3}, Y: {rotation.y:F3}, Z: {rotation.z:F3}, W: {rotation.w:F3})";
 
                     logQueue.Enqueue(logEntry);
-                    Debug.Log("TTT, " + logEntry + ", Update()");
+                    //Debug.Log("TTT, " + logEntry + ", Update()");
                 }
             }
         }
@@ -62,7 +66,7 @@ public class BodyBoneLogger : MonoBehaviour
         {
             string logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}: Skeleton data is not valid or bones are missing.";
             logQueue.Enqueue(logEntry);
-            Debug.LogWarning("TTT, " + logEntry + ", Update()");
+            //Debug.LogWarning("TTT, " + logEntry + ", Update()");
         }
     }
 

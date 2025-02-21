@@ -2473,6 +2473,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d3bcbbb44b1ae148bfaf2a43b1b59d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 2438560284076026643}
 --- !u!114 &8433002084703855467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2485,6 +2486,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e64db75b299f70a4bbc1296710c4430c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 2438560284076026643}
 --- !u!114 &710646372860626558
 MonoBehaviour:
   m_ObjectHideFlags: 0
