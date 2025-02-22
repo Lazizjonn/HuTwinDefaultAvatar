@@ -47,24 +47,31 @@ public class ExpressionLogger : MonoBehaviour
 
     void Update()
     {
-        if (faceExpressions.ValidExpressions)
+        try
         {
-            for (int i = 0; i < faceExpressions.Count; i++)
+            if (faceExpressions.ValidExpressions)
             {
-                OVRFaceExpressions.FaceExpression expression = (OVRFaceExpressions.FaceExpression)i;
-                float weight = faceExpressions[expression];
-                string logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}: Expression {expression}: {weight}";
+                for (int i = 0; i < faceExpressions.Count; i++)
+                {
+                    OVRFaceExpressions.FaceExpression expression = (OVRFaceExpressions.FaceExpression)i;
+                    float weight = faceExpressions[expression];
+                    string logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}: Expression {expression}: {weight}";
 
-                // Enqueue the log entry
-                logQueue.Enqueue(logEntry);
-                //Debug.Log("TTT, " + logEntry + ", Update()");
+                    // Enqueue the log entry
+                    logQueue.Enqueue(logEntry);
+                    //Debug.Log("TTT, " + logEntry + ", Update()");
+                }
+            }
+            else
+            {
+                string logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}: Face expressions are not valid.";
+                logQueue.Enqueue(logEntry); // Log invalid state for future debugging
+                                            //Debug.LogWarning("TTT, " + logEntry + ", Update()");
             }
         }
-        else
+        catch (Exception e)
         {
-            string logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}: Face expressions are not valid.";
-            logQueue.Enqueue(logEntry); // Log invalid state for future debugging
-            //Debug.LogWarning("TTT, " + logEntry + ", Update()");
+            Debug.Log("TTT, ExpressionLogger::Update() crashed");
         }
     }
 
@@ -85,12 +92,19 @@ public class ExpressionLogger : MonoBehaviour
 
     void OnDestroy()
     {
-        isRunning = false;
-        logThread?.Join(); // Waiting for the thread to finish
+        try
+        {
+            isRunning = false;
+            logThread?.Join(); // Waiting for the thread to finish
 
-        // Log shutdown for debugging purposes
-        string shutdownLog = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}: Logging stopped and application shutting down.";
-        File.AppendAllText(logFilePath, shutdownLog + "\n");
-        Debug.Log("TTT, " + shutdownLog + ", OnDestroy()");
+            // Log shutdown for debugging purposes
+            string shutdownLog = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}: Logging stopped and application shutting down.";
+            File.AppendAllText(logFilePath, shutdownLog + "\n");
+            Debug.Log("TTT, " + shutdownLog + ", OnDestroy()");
+        }
+        catch (Exception e)
+        {
+            Debug.Log("TTT, ExpressionLogger::OnDestroy() crashed");
+        }  
     }
 }

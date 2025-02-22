@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Netcode;
 using Oculus.Movement.Tracking;
+using System;
 
 [System.Serializable]
 public class FaceDataExchangeScript : NetworkBehaviour
@@ -27,7 +28,15 @@ public class FaceDataExchangeScript : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        UpdateFaceExpression();
+        try
+        {
+            UpdateFaceExpression();
+        } 
+        catch (Exception e)
+        {
+            Debug.Log("TTT, FaceDataExchangeScript::Update() crashed");
+        }
+
     }
 
     public void OnNewClientConnected(ulong clientId)
@@ -69,8 +78,8 @@ public class FaceDataExchangeScript : NetworkBehaviour
         hostFaceShareScript.SetFaceData(hostData);
 
         float[] data = clientFaceShareScript.GetFaceData();
-        hisFaceObject[0].UpdateExpressionWeightFromRemote(data);
-        hisFaceObject[1].UpdateExpressionWeightFromRemote(data);
+        hisFaceObject[0]?.UpdateExpressionWeightFromRemote(data);
+        hisFaceObject[1]?.UpdateExpressionWeightFromRemote(data);
     }
 
     private void SetExpressionPlayerClient(float[] clientData)
@@ -80,7 +89,7 @@ public class FaceDataExchangeScript : NetworkBehaviour
         clientFaceShareScript.SetFaceData(clientData);
 
         float[] data = hostFaceShareScript.GetFaceData();
-        hisFaceObject[0].UpdateExpressionWeightFromRemote(data);
-        hisFaceObject[1].UpdateExpressionWeightFromRemote(data);
+        hisFaceObject[0]?.UpdateExpressionWeightFromRemote(data);
+        hisFaceObject[1]?.UpdateExpressionWeightFromRemote(data);
     }
 }

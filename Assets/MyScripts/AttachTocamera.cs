@@ -1,6 +1,6 @@
 using UnityEngine;
 using Unity.Netcode;
-
+using System;
 
 public class AttachToCamera : MonoBehaviour
 {
@@ -21,7 +21,15 @@ public class AttachToCamera : MonoBehaviour
 
     void Update()
     {
-        this.transform.position = cameraRig.transform.position + new Vector3(0, 1.1f, 0.0f);
-        this.transform.rotation = cameraRig.transform.rotation;
+        try
+        {
+            this.transform.position = cameraRig.transform.position + new Vector3(0, 1.1f, 0.0f);
+            this.transform.rotation = cameraRig.transform.rotation;
+        }
+        catch (Exception e)
+        {
+            Debug.Log("TTT, AttachToCamera::Update() crashed");
+        }
+
     }
 }

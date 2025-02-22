@@ -47,26 +47,33 @@ public class BodyBoneLogger : MonoBehaviour
 
     void Update()
     {
-        if (skeleton.IsDataValid && skeleton.Bones != null)
+        try
         {
-            foreach (var bone in skeleton.Bones)
+            if (skeleton.IsDataValid && skeleton.Bones != null)
             {
-                if (bone != null && bone.Transform != null)
+                foreach (var bone in skeleton.Bones)
                 {
-                    Vector3 position = bone.Transform.position;
-                    Quaternion rotation = bone.Transform.rotation;
-                    string logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}: Bone {bone.Id} - Position: (X: {position.x:F3}, Y: {position.y:F3}, Z: {position.z:F3}), Rotation: (X: {rotation.x:F3}, Y: {rotation.y:F3}, Z: {rotation.z:F3}, W: {rotation.w:F3})";
+                    if (bone != null && bone.Transform != null)
+                    {
+                        Vector3 position = bone.Transform.position;
+                        Quaternion rotation = bone.Transform.rotation;
+                        string logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}: Bone {bone.Id} - Position: (X: {position.x:F3}, Y: {position.y:F3}, Z: {position.z:F3}), Rotation: (X: {rotation.x:F3}, Y: {rotation.y:F3}, Z: {rotation.z:F3}, W: {rotation.w:F3})";
 
-                    logQueue.Enqueue(logEntry);
-                    //Debug.Log("TTT, " + logEntry + ", Update()");
+                        logQueue.Enqueue(logEntry);
+                        //Debug.Log("TTT, " + logEntry + ", Update()");
+                    }
                 }
             }
+            else
+            {
+                string logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}: Skeleton data is not valid or bones are missing.";
+                logQueue.Enqueue(logEntry);
+                //Debug.LogWarning("TTT, " + logEntry + ", Update()");
+            }
         }
-        else
+        catch (Exception e)
         {
-            string logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}: Skeleton data is not valid or bones are missing.";
-            logQueue.Enqueue(logEntry);
-            //Debug.LogWarning("TTT, " + logEntry + ", Update()");
+            Debug.Log("TTT, BodyBoneLogger::Update() crashed");
         }
     }
 
@@ -87,11 +94,18 @@ public class BodyBoneLogger : MonoBehaviour
 
     void OnDestroy()
     {
-        isRunning = false;
-        logThread?.Join(); // Wait for thread to finish
+        try
+        {
+            isRunning = false;
+            logThread?.Join(); // Wait for thread to finish
 
-        string shutdownLog = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}: Logging stopped and application shutting down.";
-        File.AppendAllText(logFilePath, shutdownLog + "\n");
-        Debug.Log("TTT, " + shutdownLog + ", OnDestroy()");
+            string shutdownLog = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}: Logging stopped and application shutting down.";
+            File.AppendAllText(logFilePath, shutdownLog + "\n");
+            Debug.Log("TTT, " + shutdownLog + ", OnDestroy()");
+        }
+        catch (Exception e)
+        {
+            Debug.Log("TTT, BodyBoneLogger::OnDestroy() crashed");
+        }
     }
 }
