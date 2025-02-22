@@ -20,5 +20,5 @@ Note 🪧: Build an apk file with "it.cagliari.HuTwinDefaultAvatar" package name
 Logged expression files:
 - 📃 "bone_log_yyyy_MM_dd_HH-mm-ss.txt"
 - 📃 "face_log_yyyy_MM_dd_HH-mm-ss.txt"
-- if android app:    💾 in "Storage\Android\data\it.cagliari.HuTwinDefaultAvatar\files\..."
-- if play mode:      💾 in "C:\Users\<User-name>\AppData\LocalLow\cagliari\HuTwinDefaultAvatar\..."
+    - if android app:               💾 in "Storage\Android\data\it.cagliari.HuTwinDefaultAvatar\files\..."
+    - if play mode or exe mode:     💾 in "C:\Users\<User-name>\AppData\LocalLow\cagliary\HuTwinDefaultAvatar\..."
