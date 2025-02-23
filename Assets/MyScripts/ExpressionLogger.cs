@@ -12,6 +12,7 @@ public class ExpressionLogger : MonoBehaviour
     private OVRFaceExpressions faceExpressions;
     private string logFilePath;
     private ConcurrentQueue<string> logQueue = new ConcurrentQueue<string>();
+    private CancellationTokenSource cts = new();
     private Thread logThread;
     private bool isRunning = true;
 
@@ -41,7 +42,7 @@ public class ExpressionLogger : MonoBehaviour
         Debug.Log("TTT, Expression log file created at " + logFilePath + ", Start()");
 
         // Start the logging thread, my new thread
-        logThread = new Thread(LogToFile);
+        logThread = new Thread(() => LogToFile(cts.Token));
         logThread.Start();
     }
 
@@ -75,10 +76,12 @@ public class ExpressionLogger : MonoBehaviour
         }
     }
 
-    private void LogToFile()
+    private void LogToFile(CancellationToken token)
     {
         while (isRunning || !logQueue.IsEmpty)
         {
+            if (token.IsCancellationRequested) break;       // quits the loop to stop current process
+
             if (logQueue.TryDequeue(out string logEntry))
             {
                 File.AppendAllText(logFilePath, logEntry + "\n");
@@ -95,7 +98,8 @@ public class ExpressionLogger : MonoBehaviour
         try
         {
             isRunning = false;
-            logThread?.Join(); // Waiting for the thread to finish
+            cts?.Cancel();      // stopping process, which makes Thread stopped
+            cts?.Dispose();     // stopping process, which makes Thread stopped
 
             // Log shutdown for debugging purposes
             string shutdownLog = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}: Logging stopped and application shutting down.";

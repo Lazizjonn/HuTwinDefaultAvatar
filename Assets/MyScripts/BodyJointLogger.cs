@@ -12,6 +12,7 @@ public class BodyBoneLogger : MonoBehaviour
     private OVRSkeleton skeleton;
     private string logFilePath;
     private ConcurrentQueue<string> logQueue = new ConcurrentQueue<string>();
+    private CancellationTokenSource cts = new();
     private Thread logThread;
     private bool isRunning = true;
 
@@ -41,7 +42,7 @@ public class BodyBoneLogger : MonoBehaviour
         Debug.Log("TTT, Bone log file created at " + logFilePath + ", Start()");
 
         // Start the logging thread, my new thread
-        logThread = new Thread(LogToFile);
+        logThread = new Thread(() => LogToFile(cts.Token));
         logThread.Start();
     }
 
@@ -77,13 +78,15 @@ public class BodyBoneLogger : MonoBehaviour
         }
     }
 
-    private void LogToFile()
+    private void LogToFile(CancellationToken token)
     {
         while (isRunning || !logQueue.IsEmpty)
         {
+            if (token.IsCancellationRequested) break;       // quits the loop to stop current process
+            
             if (logQueue.TryDequeue(out string logEntry))
             {
-                File.AppendAllText(logFilePath, logEntry + "\n");
+                File.AppendAllText(logFilePath, logEntry + "\n\n");
             }
             else
             {
@@ -97,7 +100,8 @@ public class BodyBoneLogger : MonoBehaviour
         try
         {
             isRunning = false;
-            logThread?.Join(); // Wait for thread to finish
+            cts?.Cancel();      // stopping process, which makes Thread stopped
+            cts?.Dispose();     // stopping process, which makes Thread stopped
 
             string shutdownLog = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}: Logging stopped and application shutting down.";
             File.AppendAllText(logFilePath, shutdownLog + "\n");
