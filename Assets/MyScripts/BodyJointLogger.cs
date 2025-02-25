@@ -5,7 +5,7 @@ using System.IO;
 using System;
 using Unity.Netcode;
 
-public class BodyBoneLogger : MonoBehaviour
+public class BodyJointLogger : MonoBehaviour
 {
     [SerializeField] GameObject player;
 
@@ -22,15 +22,14 @@ public class BodyBoneLogger : MonoBehaviour
 
         if (skeleton == null || player == null || (player != null && player.GetComponent<NetworkObject>().IsLocalPlayer == false))
         {
-            Debug.LogError("TTT, BodyBoneLogger::Start(), OVRSkeleton component not found on this GameObject, Start()");
-            Debug.LogError("TTT, BodyBoneLogger::Start(), PLAYER: " + player.ToString() + ",   SCRIPT: " + this.ToString());
+            Debug.LogError("TTT, BodyJointLogger::Start(), OVRSkeleton component not found.");
             enabled = false;
             return;
         }
 
         // Create a unique file name with a timestamp
         string timeStamp = DateTime.Now.ToString("yyyy_MM_dd_HH-mm-ss");
-        string fileName = $"bone_log_{timeStamp}.txt";
+        string fileName = $"bone_log_{timeStamp}.csv";
 
         // Set the log file path to persistent data path with the unique file name
         logFilePath = Path.Combine(Application.persistentDataPath, fileName);
@@ -38,10 +37,10 @@ public class BodyBoneLogger : MonoBehaviour
         // Ensure the directory exists
         Directory.CreateDirectory(Path.GetDirectoryName(logFilePath));
 
-        File.WriteAllText(logFilePath, "Bone Log\n");
-        Debug.Log("TTT, Bone log file created at " + logFilePath + ", Start()");
+        File.WriteAllText(logFilePath, "Time,Bone,PositionX,PositionY,PositionZ,RotationX,RotationY,RotationZ,RotationW\n");
+        Debug.Log("TTT, BodyJointLogger::Start(), Bone log file created at: " + logFilePath);
 
-        // Start the logging thread, my new thread
+        // Start the logging thread
         logThread = new Thread(() => LogToFile(cts.Token));
         logThread.Start();
     }
@@ -58,23 +57,25 @@ public class BodyBoneLogger : MonoBehaviour
                     {
                         Vector3 position = bone.Transform.position;
                         Quaternion rotation = bone.Transform.rotation;
-                        string logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}: Bone {bone.Id} - Position: (X: {position.x:F3}, Y: {position.y:F3}, Z: {position.z:F3}), Rotation: (X: {rotation.x:F3}, Y: {rotation.y:F3}, Z: {rotation.z:F3}, W: {rotation.w:F3})";
+                        // Format the log entry
+                        string logEntry =   $"{DateTime.Now:hh:mm:ss.fff tt}, Bone {bone.Id}, " +
+                                            $"{position.x:F3}, {position.y:F3}, {position.z:F3}, " +
+                                            $"{rotation.x:F3}, {rotation.y:F3}, {rotation.z:F3}, {rotation.w:F3}";
 
                         logQueue.Enqueue(logEntry);
-                        //Debug.Log("TTT, " + logEntry + ", Update()");
                     }
                 }
             }
             else
             {
-                string logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}: Skeleton data is not valid or bones are missing.";
+                // Log invalid skeleton data
+                string logEntry = $"{DateTime.Now:hh:mm:ss.fff tt}, Skeleton data is not valid or bones are missing.";
                 logQueue.Enqueue(logEntry);
-                //Debug.LogWarning("TTT, " + logEntry + ", Update()");
             }
         }
         catch (Exception e)
         {
-            Debug.Log("TTT, BodyBoneLogger::Update() crashed");
+            Debug.LogError("TTT, BodyBoneLogger::Update() crashed");
         }
     }
 
@@ -86,7 +87,7 @@ public class BodyBoneLogger : MonoBehaviour
             
             if (logQueue.TryDequeue(out string logEntry))
             {
-                File.AppendAllText(logFilePath, logEntry + "\n\n");
+                File.AppendAllText(logFilePath, logEntry + "\n");
             }
             else
             {
@@ -100,16 +101,18 @@ public class BodyBoneLogger : MonoBehaviour
         try
         {
             isRunning = false;
-            cts?.Cancel();      // stopping process, which makes Thread stopped
-            cts?.Dispose();     // stopping process, which makes Thread stopped
+
+            // stopping process, which makes Thread stopped
+            cts?.Cancel();
+            cts?.Dispose();
 
             string shutdownLog = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}: Logging stopped and application shutting down.";
             File.AppendAllText(logFilePath, shutdownLog + "\n");
-            Debug.Log("TTT, " + shutdownLog + ", OnDestroy()");
+            Debug.Log("TTT, BodyJointLogger::OnDestroy(), message: " + shutdownLog);
         }
         catch (Exception e)
         {
-            Debug.Log("TTT, BodyBoneLogger::OnDestroy() crashed");
+            Debug.LogError("TTT, BodyBoneLogger::OnDestroy() crashed");
         }
     }
 }

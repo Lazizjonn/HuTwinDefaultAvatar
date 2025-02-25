@@ -60,7 +60,7 @@ public class FaceDataExchangeScript : NetworkBehaviour
         if (NetworkManager.Singleton != null && myFaceObject != null && hisFaceObject != null)
         {
             myExpressions = myFaceObject[0].PrepareRemoteExpressionWeights();
-            Debug.LogError("--- UpdateFaceExpression(), myExpressions.array.Length: " + myExpressions.Length);
+            Debug.Log("--- UpdateFaceExpression(), myExpressions.array.Length: " + myExpressions.Length);
             
             if (NetworkManager.Singleton.IsHost)
             {
