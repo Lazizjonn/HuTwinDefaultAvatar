@@ -575,6 +575,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1716760743991777080, guid: cddd639cb2a75aa40b7c28d63652d49a, type: 3}
   m_PrefabInstance: {fileID: 16085903}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &21110213 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 360735803277038910, guid: 5a4fd2d813641f948919e7e4d1e839bb, type: 3}
+  m_PrefabInstance: {fileID: 8893693673181047467}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 625dcf49798b99f46ad1ed68eb6fe056, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &24601036
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5929,6 +5940,7 @@ MonoBehaviour:
   ipTextField: {fileID: 7800093629265376727}
   maxPayload: {fileID: 1808445365}
   maxPacketQueue: {fileID: 1005785349}
+  taskProgressionScript: {fileID: 21110213}
 --- !u!114 &993580012
 MonoBehaviour:
   m_ObjectHideFlags: 0

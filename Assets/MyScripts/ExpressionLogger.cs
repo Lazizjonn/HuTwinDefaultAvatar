@@ -16,6 +16,8 @@ public class ExpressionLogger : MonoBehaviour
     private Thread logThread;
     private bool isRunning = true;
 
+    private string message = null;
+
     void Start()
     {
         faceExpressions = GetComponent<OVRFaceExpressions>();
@@ -70,7 +72,7 @@ public class ExpressionLogger : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.LogError("TTT, ExpressionLogger::Update() crashed");
+            Debug.LogError("TTT, ExpressionLogger::Update() crashed: " + e.ToString());
         }
     }
 
@@ -79,6 +81,12 @@ public class ExpressionLogger : MonoBehaviour
         while (isRunning || !logQueue.IsEmpty)
         {
             if (token.IsCancellationRequested) break;       // quits the loop to stop current process
+
+            if (message != null)
+            {
+                File.AppendAllText(logFilePath, message);
+                message = null;
+            }
 
             if (logQueue.TryDequeue(out string logEntry))
             {
@@ -91,22 +99,32 @@ public class ExpressionLogger : MonoBehaviour
         }
     }
 
+    public void AddTaskLevelMessage(string taskLevel)
+    {
+        string taskLevelLog = $"########################   New level - {taskLevel}   ########################";
+        message = "\n" + taskLevelLog + "\n";
+    }
+
     void OnDestroy()
     {
         try
         {
             isRunning = false;
-            cts?.Cancel();      // stopping process, which makes Thread stopped
-            cts?.Dispose();     // stopping process, which makes Thread stopped
 
-            // Log shutdown for debugging purposes
+            // stopping process, which makes logThread stopped
+            cts?.Cancel();
+            cts?.Dispose();
+
+            Thread.Sleep(50); // wait until logThread stoppes and then we can write final log
+
+            // Final log for debugging purposes
             string shutdownLog = $"{DateTime.Now:hh:mm:ss.fff tt},Shutdown,Application shutting down.";
             File.AppendAllText(logFilePath, shutdownLog + "\n");
             Debug.Log("TTT, ExpressionLogger::OnDestroy(), message: " + shutdownLog);
         }
         catch (Exception e)
         {
-            Debug.LogError("TTT, ExpressionLogger::OnDestroy() crashed");
+            Debug.LogError("TTT, ExpressionLogger::OnDestroy() crashed: " + e.ToString());
         }  
     }
 }

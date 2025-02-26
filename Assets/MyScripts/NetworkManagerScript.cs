@@ -13,6 +13,8 @@ public class NetworkManagerScript : MonoBehaviour
     [SerializeField] private TMP_InputField maxPayload;
     [SerializeField] private TMP_InputField maxPacketQueue;
 
+    [SerializeField] private NetworkTaskProgression taskProgressionScript;
+
 
     void Start()
     {
@@ -36,6 +38,14 @@ public class NetworkManagerScript : MonoBehaviour
         foreach (var player in onlinePlayers)
         {
             player.GetComponentInChildren<FaceDataExchangeScript>().OnNewClientConnected(clientId);
+            
+            if (player.GetComponent<NetworkObject>().IsLocalPlayer == true)
+            {
+                ExpressionLogger expScript = player.GetComponent<ExpressionLogger>();
+                BodyJointLogger boneScript = player.GetComponent<BodyJointLogger>();
+
+                taskProgressionScript.SetLoggingScripts(expScript, boneScript);
+            }
         }
     }
 

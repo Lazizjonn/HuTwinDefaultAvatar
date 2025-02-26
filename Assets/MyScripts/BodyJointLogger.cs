@@ -16,6 +16,8 @@ public class BodyJointLogger : MonoBehaviour
     private Thread logThread;
     private bool isRunning = true;
 
+    private string message = null;
+
     void Start()
     {
         skeleton = GetComponent<OVRSkeleton>();
@@ -75,7 +77,7 @@ public class BodyJointLogger : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.LogError("TTT, BodyBoneLogger::Update() crashed");
+            Debug.LogError("TTT, BodyBoneLogger::Update() crashed: " + e.ToString());
         }
     }
 
@@ -84,7 +86,13 @@ public class BodyJointLogger : MonoBehaviour
         while (isRunning || !logQueue.IsEmpty)
         {
             if (token.IsCancellationRequested) break;       // quits the loop to stop current process
-            
+
+            if (message != null)
+            {
+                File.AppendAllText(logFilePath, message);
+                message = null;
+            }
+
             if (logQueue.TryDequeue(out string logEntry))
             {
                 File.AppendAllText(logFilePath, logEntry + "\n");
@@ -96,23 +104,32 @@ public class BodyJointLogger : MonoBehaviour
         }
     }
 
+    public void AddTaskLevelMessage(string taskLevel)
+    {
+        string taskLevelLog = $"########################   New level - {taskLevel}   ########################";
+        message = "\n" + taskLevelLog + "\n";
+    }
+
     void OnDestroy()
     {
         try
         {
             isRunning = false;
 
-            // stopping process, which makes Thread stopped
+            // stopping process, which makes logThread stopped
             cts?.Cancel();
             cts?.Dispose();
 
-            string shutdownLog = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}: Logging stopped and application shutting down.";
+            Thread.Sleep(50); // wait until logThread stops and then we can write final log
+
+            // Final log for debugging purposes
+            string shutdownLog = $"{DateTime.Now:hh:mm:ss.fff tt},Shutdown,Application shutting down.";
             File.AppendAllText(logFilePath, shutdownLog + "\n");
-            Debug.Log("TTT, BodyJointLogger::OnDestroy(), message: " + shutdownLog);
+            Debug.Log("TTT, ExpressionLogger::OnDestroy(), message: " + shutdownLog);
         }
         catch (Exception e)
         {
-            Debug.LogError("TTT, BodyBoneLogger::OnDestroy() crashed");
+            Debug.LogError("TTT, BodyBoneLogger::OnDestroy() crashed: " + e.ToString());
         }
     }
 }

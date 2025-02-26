@@ -19,10 +19,8 @@ public class NetworkTaskProgression : NetworkBehaviour
     public GameObject pizza;
     public GameObject cheeseGrating;
 
-    public GameObject  ExperimentNameInput;
-    public GameObject  ExperimentSettingInput;
-    private String ExperimentName = "";
-    private String ExperimentSetting = "";
+    private String ExperimentName = "User_1";
+    private String ExperimentSetting = "Setting_1";
     // ===== ---- Variable to check progression ----=======///
     private double initialTimer = 0;
     private double doughKneadedTimer = 0;
@@ -77,16 +75,16 @@ public class NetworkTaskProgression : NetworkBehaviour
     [System.NonSerialized] public bool LocalHaptic = false;
     [System.NonSerialized] public bool OtherHaptic = false;
     [System.NonSerialized] public bool isServer;
-    
+
     // Task Identifier
     private float taskTimer = 0f;
     public int sessionID;
     //public bool test;
     //public bool SingleUser;
-    
+
     // Does this user or the other use haptics?
     public SetupNumber setup;
-    public enum SetupNumber{
+    public enum SetupNumber {
         NoHaptic,
         ServerHaptic,
         ClientHaptic
@@ -99,11 +97,15 @@ public class NetworkTaskProgression : NetworkBehaviour
     //private string filePath = ;
     //====================================================================
     //------------------ RPC METHODS -------------------------------------
+
+    //--------===== Update logs during task process =====-----------------
+    private ExpressionLogger expressionScript;
+    private BodyJointLogger jointScript;
+    private int currentTaskLevel = 0;
+
     private void SaveData()
     {
         Debug.Log("SAVE CALLED ========1111111111111111111111!==========");
-        ExperimentName = ExperimentNameInput.GetComponent<TMP_InputField>().text.ToString();
-        ExperimentSetting = ExperimentSettingInput.GetComponent<TMP_InputField>().text.ToString();
         string data = $"{ExperimentName},{ExperimentSetting},{doughKneadedTimer.ToString()},{doughSpreadTimer.ToString()},{waterFilledTimer.ToString()},{flourFilledTimer.ToString()},{tomatoSpreadTimer.ToString()},{sausagePizzaDoneTimer.ToString()},{bellPepperPizzaDoneTimer.ToString()},{doughPlacedTimer.ToString()},{pizzafinishedTimer.ToString()},{pizzaBakedTimer.ToString()},{gamefinishedTimer.ToString()}\n"; // add all variables with a newline
 
         //string data = $"{ExperimentName},{ExperimentSetting},{doughKneadedTimer},{doughSpreadTimer},{waterFilledTimer},{flourFilledTimer},{tomatoSpreadTimer},{sausagePizzaDoneTimer},{bellPepperPizzaDoneTimer},{doughPlacedTimer},{pizzafinishedTimer},{pizzaBakedTimer},{gamefinishedTimer}"; // add all variables
@@ -119,7 +121,7 @@ public class NetworkTaskProgression : NetworkBehaviour
         // Append data to the file
         File.AppendAllText(filePath, data);
     }
-    
+
     [ClientRpc]
     public void ruthPointClientRpc()
     {
@@ -155,7 +157,7 @@ public class NetworkTaskProgression : NetworkBehaviour
     {
         SaveData();
         waterFilled.Value = value;
-        waterFilledTimer  = Time.time - initialTimer;
+        waterFilledTimer = Time.time - initialTimer;
         UpdateInstruction();
         UpdateInstructionClientRpc();
         //ruthPointClientRpc();
@@ -164,7 +166,7 @@ public class NetworkTaskProgression : NetworkBehaviour
     public void flourFilledServerRpc(bool value)
     {
         flourFilled.Value = value;
-        flourFilledTimer  = Time.time - initialTimer;
+        flourFilledTimer = Time.time - initialTimer;
         UpdateInstruction();
         UpdateInstructionClientRpc();
         //ruthPointClientRpc();
@@ -178,7 +180,7 @@ public class NetworkTaskProgression : NetworkBehaviour
         UpdateInstructionClientRpc();
         //ruthPointClientRpc();
     }
-    
+
     [ServerRpc(RequireOwnership = false)]
     public void tomatoSpreadServerRpc(bool value)
     {
@@ -188,17 +190,17 @@ public class NetworkTaskProgression : NetworkBehaviour
         UpdateInstructionClientRpc();
         //ruthPointClientRpc();
     }
-    
+
     [ServerRpc(RequireOwnership = false)]
     public void sausagePizzaDoneServerRpc(bool value)
     {
         sausagePizzaDone.Value = value;
-        sausagePizzaDoneTimer  = Time.time - initialTimer;
+        sausagePizzaDoneTimer = Time.time - initialTimer;
         UpdateInstruction();
         UpdateInstructionClientRpc();
         //ruthPointClientRpc();
     }
-    
+
     [ServerRpc(RequireOwnership = false)]
     public void bellPepperPizzaDoneServerRpc(bool value)
     {
@@ -208,12 +210,12 @@ public class NetworkTaskProgression : NetworkBehaviour
         UpdateInstructionClientRpc();
         //ruthPointClientRpc();
     }
-    
+
     [ServerRpc(RequireOwnership = false)]
     public void doughPlacedServerRpc(bool value)
     {
         doughPlaced.Value = value;
-        doughPlacedTimer  = Time.time - initialTimer;
+        doughPlacedTimer = Time.time - initialTimer;
         UpdateInstruction();
         UpdateInstructionClientRpc();
         //ruthPointClientRpc();
@@ -222,24 +224,24 @@ public class NetworkTaskProgression : NetworkBehaviour
     public void pizzaFinishedServerRpc(bool value)
     {
         pizzaFinished.Value = value;
-        pizzafinishedTimer  = Time.time - initialTimer;
+        pizzafinishedTimer = Time.time - initialTimer;
         //SaveData();
         UpdateInstruction();
         UpdateInstructionClientRpc();
         //ruthPointClientRpc();
     }
-    
+
     [ServerRpc(RequireOwnership = false)]
     public void GameFinishedServerRpc(bool value)
     {
         finished.Value = value;
-        gamefinishedTimer  = Time.time - initialTimer;
-        if(CanWrite && (isServer || IsHost)) SaveData();
+        gamefinishedTimer = Time.time - initialTimer;
+        if (CanWrite && (isServer || IsHost)) SaveData();
         UpdateInstruction();
         UpdateInstructionClientRpc();
         //ruthPointClientRpc();
     }
-    
+
     [ServerRpc(RequireOwnership = false)]
     public void ovenOpenServerRpc(bool value)
     {
@@ -285,7 +287,7 @@ public class NetworkTaskProgression : NetworkBehaviour
         // JohnAnimator.SetBool("IsFinished", true);
         // RuthAnimator.SetBool("IsFinished", true);
     }
-    
+
     [ServerRpc(RequireOwnership = false)]
     public void timerRunningServerRpc(bool value)
     {
@@ -304,8 +306,8 @@ public class NetworkTaskProgression : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void pizzaBakeDecreaseTimerServerRpc(float value)
     {
-        if( (pizzaBakeTimer.Value - _lastPizzaBakeTimer) >= 1.0)
-        {   pizzaBakeTimer.Value = _lastPizzaBakeTimer;
+        if ((pizzaBakeTimer.Value - _lastPizzaBakeTimer) >= 1.0)
+        { pizzaBakeTimer.Value = _lastPizzaBakeTimer;
             UpdateInstruction();
             UpdateInstructionClientRpc();
         }
@@ -325,7 +327,7 @@ public class NetworkTaskProgression : NetworkBehaviour
         UpdateInstruction();
         UpdateInstructionClientRpc();
     }
-    
+
     [ServerRpc(RequireOwnership = false)]
     public void sausageCutServerRpc(int value)
     {
@@ -362,48 +364,50 @@ public class NetworkTaskProgression : NetworkBehaviour
         UpdateInstruction();
         UpdateInstructionClientRpc();
     }
-    
+
     [ServerRpc(RequireOwnership = false)]
-    private void BakePizzaServerRpc(){
+    private void BakePizzaServerRpc() {
         BakedPizzaVisual[] bakeScripts = pizza.GetComponentsInChildren<BakedPizzaVisual>();
         foreach (BakedPizzaVisual bakeScript in bakeScripts)
         {
             bakeScript.Bake();
         }
         //pizzaBakeTimerServerRpc(0);
-        SetHapticVibration(0.3f,0.3f);
+        SetHapticVibration(0.3f, 0.3f);
         BakePizzaClientRpc();
     }
     [ClientRpc]
-    private void BakePizzaClientRpc(){
+    private void BakePizzaClientRpc() {
         BakedPizzaVisual[] bakeScripts = pizza.GetComponentsInChildren<BakedPizzaVisual>();
         foreach (BakedPizzaVisual bakeScript in bakeScripts)
         {
             bakeScript.Bake();
         }
-        SetHapticVibration(0.3f,0.3f);
+        SetHapticVibration(0.3f, 0.3f);
     }
     //====================================================================
-    
+
     private void Awake()
     {
         isServer = IsServer;
     }
 
-    private void Start(){
+    private void Start() {
         //filename = Application.persistentDataPath + "/" + filename;
         setObjects(canvas, instructionText, VRcamera);
-        
+
         // JohnAnimator = John.GetComponent<Animator>();
         // MeganAnimator = Megan.GetComponent<Animator>();
         // RuthAnimator = Ruth.GetComponent<Animator>();
     }
 
-    public void setObjects(GameObject canv, TMP_Text canvtext, GameObject camer){
+    public void setObjects(GameObject canv, TMP_Text canvtext, GameObject camer) {
         instructionText = canvtext;
         canvas = canv;
         VRcamera = camer;
-       // instructionText.text = "Push The Button to Start the Game";
+
+        // 1
+        // instructionText.text = "Push The Button to Start the Game";
         instructionText.text = "Premi il pulsante per iniziare il gioco";
     }
 
@@ -411,52 +415,76 @@ public class NetworkTaskProgression : NetworkBehaviour
         if (final) return;
         if (gameStarted.Value)
         {
+            // 2
             // instructionText.text = "Mix Water and Flour in Bowl";
-            instructionText.text = "Mescola l'acqua e la farina nella ciotola";
+            instructionText.text = "Metti l'acqua e la farina nella ciotola e mescola con le mani";
+            TaskLevelMessageToLog(1);
         }
         if (flourFilled.Value && waterFilled.Value){
-           // instructionText.text = "Knead the Dough";
-            instructionText.text = "Impasta la pasta";
+            // 3
+            // instructionText.text = "Knead the Dough";
+            instructionText.text = "Lavora l'impasto con le mani";
+            TaskLevelMessageToLog(2);
         }
         if (doughKneaded.Value){
-           // instructionText.text = "Place Dough on Indicator";
-            instructionText.text = "Posiziona l'impasto nell'indicazione";
+            // 4
+            // instructionText.text = "Place Dough on Indicator";
+            instructionText.text = "Posiziona l'impasto nell'indicatore";
+            TaskLevelMessageToLog(3);
         }
         if (doughPlaced.Value){
+            // 5
             // instructionText.text = "Spread Dough with Two Hands using Rolling Pin";
             instructionText.text = "Stendi l'impasto con due mani usando il mattarello";
+            TaskLevelMessageToLog(4);
         }
         if (doughSpread.Value){
+            // 6
             // instructionText.text = "Spread Sauce on Pizza with Spoon";
             instructionText.text = "Spalma il sugo sulla pizza con il cucchiaio";
+            TaskLevelMessageToLog(5);
         }
         if (tomatoSpread.Value && (sausageCut.Value < 4 || bellPepperCut.Value < 4)){
+            // 7
             // instructionText.text = "Cut Pepper = " + Math.Min(bellPepperCut.Value,4) + "of 4 Cut Sausage = " + Math.Min(sausageCut.Value,4) + " of 4";   // \n
-            instructionText.text = "Taglia il peperone = " + Math.Min(bellPepperCut.Value,4) + "of 4 Taglia la salsiccia = " + Math.Min(sausageCut.Value,4) + " of 4";   // \n
+            instructionText.text = "Taglia il peperone = " + Math.Min(bellPepperCut.Value,4) + "di 4 Taglia la salsiccia = " + Math.Min(sausageCut.Value,4) + " of 4";   // \n
+            TaskLevelMessageToLog(6);
         }
         if (tomatoSpread.Value && (sausageCut.Value >= 4 && bellPepperCut.Value >= 4)){
+            // 8
             // instructionText.text = "Place 4 Slices of each Topping on Pizza";
             instructionText.text = "Posiziona 4 fette di ogni condimento sulla pizza";
+            TaskLevelMessageToLog(7);
         }
-        if (pizzaFinished.Value && !ovenOpen.Value){ 
-            // instructionText.text = "Open Oven with Button";   // This one DOES HAPPEN
-            instructionText.text = "Apri il forno con il pulsante";   // This one DOES HAPPEN
+        if (pizzaFinished.Value && !ovenOpen.Value){
+            // 9
+            // instructionText.text = "Open Oven with Button";
+            instructionText.text = "Apri il forno con il pulsante";
+            TaskLevelMessageToLog(8);
         }
         if (pizzaFinished.Value && ovenOpen.Value){ //sans!  DOES NOT
+            // 10
             // instructionText.text = "Put Pizza in Oven with Pizza Shovel";
             instructionText.text = "Inforna la pizza con la pala";
+            TaskLevelMessageToLog(9);
         }
         if (pizzaInOven.Value && ovenOpen.Value){ //sans!  DOES NOT
+            // 11
             // instructionText.text = "Close Oven";
-            instructionText.text = "Chiudi Forno";
+            instructionText.text = "Chiudi il forno";
+            TaskLevelMessageToLog(10);
         }
         if (pizzaInOven.Value && !ovenOpen.Value){  //DOES HAPPEN
+            // 12
             // instructionText.text = "Baking " + pizzaBakeTimer.Value.ToString("F1");
-            instructionText.text = "Cottura al Forno " + pizzaBakeTimer.Value.ToString("F1");
+            instructionText.text = "Cuoci la pizza " + pizzaBakeTimer.Value.ToString("F1");
+            TaskLevelMessageToLog(11);
         }
         if (pizzaBakeTimer.Value <= 0){
+            // 13
             // instructionText.text = "Place Pizza on Plate with Pizza Shovel";
-            instructionText.text = "Posiziona la Pizza sul Piatto con la Pala per Pizza";
+            instructionText.text = "Usa la pala per servire la pizza nel piatto";
+            TaskLevelMessageToLog(12);
 
             if (!pizzaBaked.Value)
             {
@@ -466,6 +494,7 @@ public class NetworkTaskProgression : NetworkBehaviour
             pizzaBaked.Value = true; // TODO
         }
         if (finished.Value){
+            // 14
             // if (!SingleUser){
             //     GameObject interactables = GameObject.Find("InteractablesMultiUser");
             //     for (int i = 0; i < interactables.transform.childCount; i++)
@@ -480,6 +509,7 @@ public class NetworkTaskProgression : NetworkBehaviour
 
             //instructionText.text = "Well Done , Thank you for your contribution!";
             instructionText.text = "Ben fatto! Grazie per il tuo contributo!";
+            TaskLevelMessageToLog(13);
         }
         if (cheeseGrated.Value && !final && finished.Value){
             instructionText.text = "Well Done!  Time: " + taskTimer.ToString("F1") + " Seconds";
@@ -493,6 +523,26 @@ public class NetworkTaskProgression : NetworkBehaviour
             // Debug.LogWarning("------------------------------------------------");
             final = true;
             // if (!test) InvokeRemoteMethod("WriteCSV", 65535, MeasurementsToString());
+        }
+    }
+
+    public void SetLoggingScripts(ExpressionLogger expScript, BodyJointLogger boneScript)
+    {
+        if(expressionScript == null) expressionScript = expScript;
+        if(jointScript == null) jointScript = boneScript;
+    }
+
+    private void TaskLevelMessageToLog(int taskLevel)
+    {
+        if (currentTaskLevel >= taskLevel) return;
+        
+        if (expressionScript != null && jointScript != null)
+        {
+            currentTaskLevel = taskLevel;
+            string levelString = "TASK " + currentTaskLevel;
+
+            expressionScript.AddTaskLevelMessage(levelString);
+            jointScript.AddTaskLevelMessage(levelString);
         }
     }
 
