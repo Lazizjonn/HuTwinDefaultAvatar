@@ -17,8 +17,8 @@ Import below samples from menu: Window -> Package Manager:
 
 Note 🪧: Build an apk file with "it.cagliari.HuTwinDefaultAvatar" package name in Build Profiles setting panel.
 
-Logged expression files:
-- 📃 "bone_log_yyyy_MM_dd_HH-mm-ss.txt"
-- 📃 "face_log_yyyy_MM_dd_HH-mm-ss.txt"
+Logged expression files (open and process in Excel):
+- 📃 "bone_log_yyyy_MM_dd_HH-mm-ss.csv"
+- 📃 "face_log_yyyy_MM_dd_HH-mm-ss.csv"
     - if android app:               💾 in "Storage\Android\data\it.cagliari.HuTwinDefaultAvatar\files\..."
     - if play mode or exe mode:     💾 in "C:\Users\<User-name>\AppData\LocalLow\cagliary\HuTwinDefaultAvatar\..."
